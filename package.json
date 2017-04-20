@@ -1,0 +1,26 @@
+{
+  "name": "tobyonono.github.io",
+  "version": "1.0.0",
+  "description": "FYP",
+  "main": "testserver.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tobyonono/tobyonono.github.io.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tobyonono/tobyonono.github.io/issues"
+  },
+  "homepage": "https://github.com/tobyonono/tobyonono.github.io#readme",
+  "dependencies": {
+    "cookie-parser": "^1.4.3",
+    "express": "^4.15.2",
+    "querystring": "^0.2.0",
+    "request": "^2.81.0"
+  }
+}
