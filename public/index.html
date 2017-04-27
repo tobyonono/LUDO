@@ -1,108 +1,88 @@
 <!doctype html>
 <html>
-  <head>
-    <title>Example of the Authorization Code flow with Spotify</title>
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-    <style type="text/css">
-      #login, #loggedin {
-        display: none;
-      }
-      .text-overflow {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        width: 500px;
-      }
-    </style>
-  </head>
+<head>
+  <title>Example of the Authorization Code flow with Spotify</title>
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Monoton" rel="stylesheet" media>
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" media>
+  <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
+  <link href="app.css" rel="stylesheet" />
+</head>
 
-  <body>
-    <div class="container">
-      <div id="login">
-        <h1>This is an example of the Authorization Code flow</h1>
-        <a href="/login" class="btn btn-primary">Log in with Spotify</a>
+<body>
+  <div class="container">
+    <div id="login">
+      <h1>LUDO</h1>
+      <a href="/login"><img src="https://assets.ifttt.com/images/channels/51464135/icons/on_color_large.png" width="40" height="40" /></a>
+      <h2>L O G I N</h2>
+    </div>
+    <div id="loggedin">
+     <img id="profiler" width="40" height="40" />
+      <h1>LUDO</h1>   
+      <div id ="getCurrentTrack">
+       <img id="trackimg" width="250" height="250" />
+        <p><span id="songName"></span></p>
+        <p><span id="artistName"></span></p>
+        <p><span id="albumName"></span></p>
       </div>
-      <div id="loggedin">
-        <div id="user-profile">
-        </div>
-        <div id="oauth">
-        </div>
-        <button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>
+      <div>
+       <input type="image" id="previous" src="http://freeiconbox.com/icon/256/20648.png" class="invert" width="25" height="25" />
+       <input type="image" name="play-pause" src="http://iconizer.net/files/DefaultIcon_ver_0.11/orig/media-play.png" class="invert" width="25" height="25" />
+       <input type="image" name="fast-forward" src="http://freeiconbox.com/icon/256/20648.png" class="flip" width="25" height="25" /> 
       </div>
     </div>
+  </div>
+</div>
 
-    <script id="user-profile-template" type="text/x-handlebars-template">
-      <h1>Logged in as {{display_name}}</h1>
-      <div class="media">
-        <div class="pull-left">
-          <img class="media-object" width="150" src="{{images.0.url}}" />
-        </div>
-        <div class="media-body">
-          <dl class="dl-horizontal">
-            <dt>Display name</dt><dd class="clearfix">{{display_name}}</dd>
-            <dt>Id</dt><dd>{{id}}</dd>
-            <dt>Email</dt><dd>{{email}}</dd>
-            <dt>Spotify URI</dt><dd><a href="{{external_urls.spotify}}">{{external_urls.spotify}}</a></dd>
-            <dt>Link</dt><dd><a href="{{href}}">{{href}}</a></dd>
-            <dt>Profile Image</dt><dd class="clearfix"><a href="{{images.0.url}}">{{images.0.url}}</a></dd>
-            <dt>Country</dt><dd>{{country}}</dd>
-          </dl>
-        </div>
-      </div>
-    </script>
-
-    <script id="oauth-template" type="text/x-handlebars-template">
-      <h2>oAuth info</h2>
-      <dl class="dl-horizontal">
-        <dt>Access token</dt><dd class="text-overflow">{{access_token}}</dd>
-        <dt>Refresh token</dt><dd class="text-overflow">{{refresh_token}}></dd>
-      </dl>
-    </script>
-
-    <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
-    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-    <script>
-      (function() {
+<script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script>
+  (function() {
 
         /**
          * Obtains parameters from the hash of the URL
          * @return Object
          */
-        function getHashParams() {
+         function getHashParams() {
           var hashParams = {};
           var e, r = /([^&;=]+)=?([^&;]*)/g,
-              q = window.location.hash.substring(1);
+          q = window.location.hash.substring(1);
           while ( e = r.exec(q)) {
-             hashParams[e[1]] = decodeURIComponent(e[2]);
-          }
-          return hashParams;
-        }
+           hashParams[e[1]] = decodeURIComponent(e[2]);
+         }
+         return hashParams;
+       }
 
-        var userProfileSource = document.getElementById('user-profile-template').innerHTML,
-            userProfileTemplate = Handlebars.compile(userProfileSource),
-            userProfilePlaceholder = document.getElementById('user-profile');
 
-        var oauthSource = document.getElementById('oauth-template').innerHTML,
-            oauthTemplate = Handlebars.compile(oauthSource),
-            oauthPlaceholder = document.getElementById('oauth');
+       var params = getHashParams();
 
-        var params = getHashParams();
+       var access_token = params.access_token,
+       refresh_token = params.refresh_token,
+       error = params.error;
 
-        var access_token = params.access_token,
-            refresh_token = params.refresh_token,
-            error = params.error;
-
-        if (error) {
-          alert('There was an error during the authentication');
-        } else {
-          if (access_token) {
-            // render oauth info
-            oauthPlaceholder.innerHTML = oauthTemplate({
-              access_token: access_token,
-              refresh_token: refresh_token
+       function refreshToken()
+       {
+        $.ajax({
+              url: '/refresh_token',
+              data: {
+                'refresh_token': refresh_token
+              }
+            }).done(function(data) {
+              access_token = data.access_token;
             });
+       }
 
-            $.ajax({
+       if (error) 
+       {
+        alert('There was an error during the authentication');
+      } 
+      else 
+      {
+        if (access_token) 
+        {
+
+            /*$.ajax({
                 url: 'https://api.spotify.com/v1/me',
                 headers: {
                   'Authorization': 'Bearer ' + access_token
@@ -114,29 +94,83 @@
                   $('#loggedin').show();
                 }
             });
-          } else {
+            */
+            displayUserInfo();
+            getCurrentSong();
+            function getCurrentSong()
+            {
+             console.log(getCurrentSong);
+             $.ajax({
+              url: 'https://api.spotify.com/v1/me/player/currently-playing',
+              headers: {
+                'Authorization': 'Bearer ' + access_token
+              },
+              success: function(response) {
+                  //currentTrackPlaceholder.innerHTML = currentTrackTemplate(response);
+                  
+                  console.log(response);
+                  var imgsrc = response.item.album.images[0].url;
+                  var songName = response.item.name;
+                  var artistName = response.item.artists[0].name;
+                  var albumName = response.item.album.name;
+                  
+                  document.getElementById("trackimg").src = imgsrc;
+                  document.getElementById("songName").innerHTML = songName;
+                  document.getElementById("artistName").innerHTML = artistName;
+                  document.getElementById("albumName").innerHTML = albumName;
+                  console.log(response);
+
+                  $('#login').hide();
+                  $('#loggedin').show();
+                }
+              });
+             setTimeout(getCurrentSong, 5000);
+           }
+
+           function displayUserInfo()
+           {
+            refreshToken();
+            $.ajax({
+              url: 'https://api.spotify.com/v1/me',
+              headers: {
+                'Authorization': 'Bearer ' + access_token
+              },
+              success: function(response){
+                var imgsrc = response.images[0].url;
+                document.getElementById("profiler").src = imgsrc;
+                console.log(response);
+              }
+            });
+           }
+
+           //function playerManip()
+           //{
+            document.getElementById('previous').addEventListener('click', function() 
+            {
+              refreshToken();
+              $.ajax({
+                url:'https://api.spotify.com/v1/me/player/previous',
+                type: 'POST',
+                headers: {
+                  'Authorization': 'Bearer ' + access_token
+                },
+                success: function(){
+                  console.log("it skipped");
+                }
+              })
+            });
+           //}
+           
+         } 
+         else 
+         {
               // render initial screen
               $('#login').show();
               $('#loggedin').hide();
+            }       
           }
-
-          document.getElementById('obtain-new-token').addEventListener('click', function() {
-            $.ajax({
-              url: '/refresh_token',
-              data: {
-                'refresh_token': refresh_token
-              }
-            }).done(function(data) {
-              access_token = data.access_token;
-              oauthPlaceholder.innerHTML = oauthTemplate({
-                access_token: access_token,
-                refresh_token: refresh_token
-              });
-            });
-          }, false);
-        }
-      })();
-    </script>
-  </body>
-</html>
+        })();
+      </script>
+    </body>
+    </html>
 
