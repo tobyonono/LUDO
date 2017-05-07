@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-  <title>Example of the Authorization Code flow with Spotify</title>
+  <title>LUDO</title>
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
   <link href="https://fonts.googleapis.com/css?family=Monoton" rel="stylesheet" media>
   <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" media>
@@ -18,25 +18,29 @@
       <h2>L O G I N</h2>
     </div>
     <div id="loggedin">
-     <img id="profiler" width="40" height="40" />
-      <h1>LUDO</h1>   
+      <div class="header-icons">
+       <h1>LUDO</h1>
+       <img id="profiler" width="40" height="40" />
+      </div>   
       <div id ="getCurrentTrack">
-       <img id="trackimg" width="250" height="250" />
-        <p><span id="songName"></span></p>
-        <p><span id="artistName"></span></p>
-        <p><span id="albumName"></span></p>
+       <div id="trackTemplate">
+        <img id="trackimg" width="250" height="250" />
+        <figcaption id="songName"></figcaption> 
+        <figcaption id="artistName"></figcaption> 
+        <figcaption id="albumName"></figcaption> 
+       </div>
       </div>
-      <div>
+      <div class="player">
        <input type="image" id="previous" src="http://freeiconbox.com/icon/256/20648.png" class="invert" width="25" height="25" />
        <input type="image" name="play-pause" src="http://iconizer.net/files/DefaultIcon_ver_0.11/orig/media-play.png" class="invert" width="25" height="25" />
-       <input type="image" name="fast-forward" src="http://freeiconbox.com/icon/256/20648.png" class="flip" width="25" height="25" /> 
+       <input type="image" id="fast-forward" src="http://freeiconbox.com/icon/256/20648.png" class="flip" width="25" height="25" /> 
       </div>
     </div>
   </div>
 </div>
 
-<script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
 <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+
 <script>
   (function() {
 
@@ -95,36 +99,97 @@
                 }
             });
             */
+            var imgsrc;
+            var currentUserName;
+            var songName;
+            var artistName;
+            var albumName;
+            var playbackArray = new Array();
+            
+            var metadata = {albumArt:imgsrc, songName:songName, artistName:artistName, albumName:albumName};
+            playbackArray[0] = metadata;
+
+
+            function showPlayBackHistory (playbackArray)
+            { 
+              var image = document.createElement('img');
+              var song = document.createElement('figcaption');
+              var artist = document.createElement('figcaption');
+              var album1 = document.createElement('figcaption');
+
+              image.src = playbackArray[1].imgURL;
+              song.textContent = playbackArray[1].nameOfSong;
+              artist.textContent = playbackArray[1].artistName;
+              album1 = playbackArray[1].nameOfAlbum;
+
+              var template = document.getElementById('trackTemplate');
+              template.appendChild(image, song, artist, album1);
+              console.log(template + "TEMPLATE");
+               
+            }
+            
+
             displayUserInfo();
             getCurrentSong();
+
             function getCurrentSong()
             {
-             console.log(getCurrentSong);
+             
+
              $.ajax({
               url: 'https://api.spotify.com/v1/me/player/currently-playing',
               headers: {
                 'Authorization': 'Bearer ' + access_token
               },
               success: function(response) {
-                  //currentTrackPlaceholder.innerHTML = currentTrackTemplate(response);
                   
-                  console.log(response);
-                  var imgsrc = response.item.album.images[0].url;
-                  var songName = response.item.name;
-                  var artistName = response.item.artists[0].name;
-                  var albumName = response.item.album.name;
+                  imgsrc = response.item.album.images[0].url;
+                  songName = response.item.name;
+                  artistName = response.item.artists[0].name;
+                  albumName = response.item.album.name;
+
+                  var jsonPushData = {clients: {
+                      userName:currentUserName, 
+                      albumArt:imgsrc, 
+                      songName:songName, 
+                      artistName:artistName, 
+                      albumName:albumName
+                    
+                  }};
+
+                  JSON.stringify(jsonPushData);
+
+                   $.ajax({
+                    data: {jsonPushData},
+                    url:'/updateArray',
+                    method: "POST",
+                  }).done(function(){
+                    console.log("It saved Properly...hopefully ");
+                  });
+
+                  //console.log(jsonPushData);
+
+                  if(playbackArray == null || (playbackArray[0].albumArt != imgsrc && playbackArray[0].songName != songName))
+                  {
+                    metadata = {albumArt:imgsrc, songName:songName, artistName:artistName, albumName:albumName};
+                    var startIndex = 0;
+                    var numElemtoRemove = 0;
+
+                    playbackArray.splice(startIndex, numElemtoRemove, metadata);
+                    //console.log(playbackArray);
+                  }
                   
                   document.getElementById("trackimg").src = imgsrc;
                   document.getElementById("songName").innerHTML = songName;
                   document.getElementById("artistName").innerHTML = artistName;
                   document.getElementById("albumName").innerHTML = albumName;
-                  console.log(response);
+                  //console.log(response);
 
                   $('#login').hide();
                   $('#loggedin').show();
                 }
               });
-             setTimeout(getCurrentSong, 5000);
+             setTimeout(getCurrentSong, 20000);
            }
 
            function displayUserInfo()
@@ -137,8 +202,9 @@
               },
               success: function(response){
                 var imgsrc = response.images[0].url;
+                currentUserName = response.display_name;
                 document.getElementById("profiler").src = imgsrc;
-                console.log(response);
+                console.log(currentUserName);
               }
             });
            }
@@ -159,6 +225,18 @@
                 }
               })
             });
+
+            document.getElementById('fast-forward').addEventListener('click', function() 
+            {
+              $.ajax({
+                url: '/test',
+                type: 'GET',
+                success: function(){
+                  console.log("IT SHOULD HAVE DONE SOMETHING");
+                }
+              })
+            });
+
            //}
            
          } 

@@ -16,6 +16,9 @@ var client_id = '4b5c02f8015941729381891f20c6f2a1'; // Your client id
 var client_secret = '2448387e7977426ca1b70ef5da956300'; // Your secret
 var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 
+var testInt = 0;
+var currentTrackInfo = {};
+
 /**
  * Generates a random string containing numbers and letters
  * @param  {number} length The length of the string
@@ -115,6 +118,13 @@ app.get('/callback', function(req, res) {
       }
     });
   }
+});
+
+app.post('/updateArray', function(req, res){
+
+
+  currentPlaybackJSON = req.query;
+  console.log('Server Side ' + req.query);
 });
 
 app.get('/refresh_token', function(req, res) {
