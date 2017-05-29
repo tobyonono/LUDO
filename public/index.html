@@ -14,13 +14,15 @@
   <div class="container">
     <div id="login">
       <h1>LUDO</h1>
-      <a href="/login"><img src="https://assets.ifttt.com/images/channels/51464135/icons/on_color_large.png" width="40" height="40" /></a>
+      <a href="/login"><img src="http://www.iconsplace.com/icons/preview/black/spotify-256.png" class="invert" width="40" height="40" /></a>
       <h2>L O G I N</h2>
     </div>
     <div id="loggedin">
       <div class="header-icons">
-       <h1>LUDO</h1>
-       <img id="profiler" width="40" height="40" />
+       <h1>LUDO
+        <img id="profiler" width="40" height="40" /> 
+       </h1>
+       
       </div>   
       <div id ="getCurrentTrack">
        <div id="trackTemplate">
@@ -32,7 +34,7 @@
       </div>
       <div class="player">
        <input type="image" id="previous" src="http://freeiconbox.com/icon/256/20648.png" class="invert" width="25" height="25" />
-       <input type="image" name="play-pause" src="http://iconizer.net/files/DefaultIcon_ver_0.11/orig/media-play.png" class="invert" width="25" height="25" />
+       <input type="image" name="play-pause" src="https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_play_arrow_48px-512.png" class="invert" width="25" height="25" />
        <input type="image" id="fast-forward" src="http://freeiconbox.com/icon/256/20648.png" class="flip" width="25" height="25" /> 
       </div>
     </div>
@@ -204,6 +206,7 @@
                 var imgsrc = response.images[0].url;
                 currentUserName = response.display_name;
                 document.getElementById("profiler").src = imgsrc;
+                document.getElementById("userName").innerHTML = currentUserName;
                 console.log(currentUserName);
               }
             });
