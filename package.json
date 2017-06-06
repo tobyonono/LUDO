@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/tobyonono/tobyonono.github.io#readme",
   "dependencies": {
+    "body-parser": "^1.17.2",
     "cookie-parser": "^1.4.3",
     "express": "^4.15.2",
     "querystring": "^0.2.0",

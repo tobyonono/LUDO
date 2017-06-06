@@ -19,7 +19,8 @@
     </div>
     <div id="loggedin">
       <div class="header-icons">
-       <h1>LUDO
+       <h1
+       >LUDO
         <img id="profiler" width="40" height="40" /> 
        </h1>
        
@@ -150,23 +151,24 @@
                   artistName = response.item.artists[0].name;
                   albumName = response.item.album.name;
 
-                  var jsonPushData = {clients: {
-                      userName:currentUserName, 
+
+                  var jsonPushData = {
+                      userName:currentUserName,
                       albumArt:imgsrc, 
                       songName:songName, 
                       artistName:artistName, 
                       albumName:albumName
-                    
-                  }};
-
-                  JSON.stringify(jsonPushData);
+                  };
 
                    $.ajax({
-                    data: {jsonPushData},
-                    url:'/updateArray',
+                    data:JSON.stringify(jsonPushData),
+                    url:'/updateJSON',
                     method: "POST",
-                  }).done(function(){
-                    console.log("It saved Properly...hopefully ");
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: function(response){
+                      console.log(response);
+                    }
                   });
 
                   //console.log(jsonPushData);
@@ -186,6 +188,8 @@
                   document.getElementById("artistName").innerHTML = artistName;
                   document.getElementById("albumName").innerHTML = albumName;
                   //console.log(response);
+
+                  getJSON();
 
                   $('#login').hide();
                   $('#loggedin').show();
@@ -212,8 +216,17 @@
             });
            }
 
-           //function playerManip()
-           //{
+           function getJSON()
+           {
+            $.ajax({
+              url: '/getJSON',
+              dataType: 'json',
+              success: function(response){
+                console.log(response);
+              }
+            });
+           }
+
             document.getElementById('previous').addEventListener('click', function() 
             {
               refreshToken();

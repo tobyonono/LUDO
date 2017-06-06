@@ -1,16 +1,10 @@
-/**
- * This is an example of a basic node.js script that performs
- * the Authorization Code oAuth2 flow to authenticate against
- * the Spotify Accounts.
- *
- * For more information, read
- * https://developer.spotify.com/web-api/authorization-guide/#authorization_code_flow
- */
+
 
 var express = require('express'); // Express web server framework
 var request = require('request'); // "Request" library
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
 
 var client_id = '4b5c02f8015941729381891f20c6f2a1'; // Your client id
 var client_secret = '2448387e7977426ca1b70ef5da956300'; // Your secret
@@ -18,6 +12,7 @@ var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 
 var testInt = 0;
 var currentTrackInfo = {};
+var clientJSON = '{"clients":{}}';
 
 /**
  * Generates a random string containing numbers and letters
@@ -40,6 +35,9 @@ var app = express();
 
 app.use(express.static(__dirname + '/public'))
    .use(cookieParser());
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.get('/login', function(req, res) {
 
@@ -120,12 +118,25 @@ app.get('/callback', function(req, res) {
   }
 });
 
-app.post('/updateArray', function(req, res){
+app.post('/updateJSON', function(req, res){
 
+  var obj = JSON.parse(clientJSON);
+  var user = req.body.userName;
 
-  currentPlaybackJSON = req.query;
-  console.log('Server Side ' + req.query);
+  if(user == user)
+  {
+    obj.clients[user] = req.body;
+    clientJSON = JSON.stringify(obj);
+  }
+  
+
+  
+  //console.log(clientJSON);
 });
+
+app.get('/getJSON', function(req, res){
+  res.json(clientJSON);
+})
 
 app.get('/refresh_token', function(req, res) {
 
