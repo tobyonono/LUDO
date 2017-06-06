@@ -123,11 +123,10 @@ app.post('/updateJSON', function(req, res){
   var obj = JSON.parse(clientJSON);
   var user = req.body.userName;
 
-  if(user == user)
-  {
-    obj.clients[user] = req.body;
-    clientJSON = JSON.stringify(obj);
-  }
+  console.log(user + "server side");
+
+  obj.clients[user] = req.body;
+  clientJSON = JSON.stringify(obj);
   
 
   

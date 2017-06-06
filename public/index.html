@@ -131,9 +131,9 @@
                
             }
             
-
             displayUserInfo();
             getCurrentSong();
+            
 
             function getCurrentSong()
             {
@@ -151,36 +151,40 @@
                   artistName = response.item.artists[0].name;
                   albumName = response.item.album.name;
 
+                  var user = returnUser();
 
                   var jsonPushData = {
-                      userName:currentUserName,
+                      userName:user,
                       albumArt:imgsrc, 
                       songName:songName, 
                       artistName:artistName, 
                       albumName:albumName
                   };
 
-                   $.ajax({
-                    data:JSON.stringify(jsonPushData),
-                    url:'/updateJSON',
-                    method: "POST",
-                    contentType: "application/json",
-                    dataType: 'json',
-                    success: function(response){
-                      console.log(response);
-                    }
-                  });
-
-                  //console.log(jsonPushData);
 
                   if(playbackArray == null || (playbackArray[0].albumArt != imgsrc && playbackArray[0].songName != songName))
                   {
                     metadata = {albumArt:imgsrc, songName:songName, artistName:artistName, albumName:albumName};
                     var startIndex = 0;
                     var numElemtoRemove = 0;
-
                     playbackArray.splice(startIndex, numElemtoRemove, metadata);
                     //console.log(playbackArray);
+
+                    if(user)
+                    {
+                       $.ajax({
+                        data:JSON.stringify(jsonPushData),
+                        url:'/updateJSON',
+                        method: "POST",
+                        contentType: "application/json",
+                        dataType: 'json',
+                        success: function(response){
+                        //console.log(currentUserName);
+                        }
+                      });
+                    } 
+
+                    getJSON();
                   }
                   
                   document.getElementById("trackimg").src = imgsrc;
@@ -189,7 +193,7 @@
                   document.getElementById("albumName").innerHTML = albumName;
                   //console.log(response);
 
-                  getJSON();
+                  
 
                   $('#login').hide();
                   $('#loggedin').show();
@@ -210,8 +214,7 @@
                 var imgsrc = response.images[0].url;
                 currentUserName = response.display_name;
                 document.getElementById("profiler").src = imgsrc;
-                document.getElementById("userName").innerHTML = currentUserName;
-                console.log(currentUserName);
+                //console.log(currentUserName);
               }
             });
            }
@@ -225,6 +228,12 @@
                 console.log(response);
               }
             });
+           }
+
+           function returnUser()
+           {
+            var currentUser = currentUserName;
+            return currentUser;
            }
 
             document.getElementById('previous').addEventListener('click', function() 
