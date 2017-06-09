@@ -107,11 +107,27 @@
             var songName;
             var artistName;
             var albumName;
+            var progress;
+            var songLength;
+            var songURL;
+            var isPlaying;
             var playbackArray = new Array();
-            
-            var metadata = {albumArt:imgsrc, songName:songName, artistName:artistName, albumName:albumName};
-            playbackArray[0] = metadata;
+            var i = 0;
 
+            
+            var jsonPushData = {
+                      userName:returnUser(),
+                      albumArt:imgsrc, 
+                      songName:songName, 
+                      artistName:artistName, 
+                      albumName:albumName,
+                      songProgress:progress,
+                      songLength:songLength,
+                      songURL:songURL,
+                      isPlaying:isPlaying
+                  };
+
+            
 
             function showPlayBackHistory (playbackArray)
             { 
@@ -150,25 +166,55 @@
                   songName = response.item.name;
                   artistName = response.item.artists[0].name;
                   albumName = response.item.album.name;
+                  progress = response.progress_ms;
+                  songLength = response.timestamp;
+                  songURL = response.context.external_urls.spotify;
+                  isPlaying = response.is_playing;
+
 
                   var user = returnUser();
 
-                  var jsonPushData = {
+                   jsonPushData = {
                       userName:user,
                       albumArt:imgsrc, 
                       songName:songName, 
                       artistName:artistName, 
-                      albumName:albumName
+                      albumName:albumName,
+                      songProgress:progress,
+                      songLength:songLength,
+                      songURL:songURL,
+                      isPlaying:isPlaying
                   };
 
-
-                  if(playbackArray == null || (playbackArray[0].albumArt != imgsrc && playbackArray[0].songName != songName))
+                  if(playbackArray.length < 1)
                   {
-                    metadata = {albumArt:imgsrc, songName:songName, artistName:artistName, albumName:albumName};
+                    playbackArray[i] = jsonPushData;
+
+                    if(user)
+                    {
+                       $.ajax({
+                        data:JSON.stringify(jsonPushData),
+                        url:'/updateJSON',
+                        method: "POST",
+                        contentType: "application/json",
+                        dataType: 'json',
+                        success: function(response){
+                        //console.log(currentUserName);
+                        }
+                      });
+                    }
+
+                    console.log(playbackArray);
+
+                    getJSON();
+                  }
+                  else if((playbackArray[i].albumArt != imgsrc && playbackArray[i].songName != songName))
+                  {
+                   
                     var startIndex = 0;
                     var numElemtoRemove = 0;
-                    playbackArray.splice(startIndex, numElemtoRemove, metadata);
-                    //console.log(playbackArray);
+                    playbackArray.splice(startIndex, numElemtoRemove, jsonPushData);
+                    i = i + 1;
 
                     if(user)
                     {
@@ -185,6 +231,9 @@
                     } 
 
                     getJSON();
+                    console.log(i + " " + playbackArray[i]);
+                    //console.log(playbackArray);
+
                   }
                   
                   document.getElementById("trackimg").src = imgsrc;

@@ -128,8 +128,6 @@ app.post('/updateJSON', function(req, res){
   obj.clients[user] = req.body;
   clientJSON = JSON.stringify(obj);
   
-
-  
   //console.log(clientJSON);
 });
 
