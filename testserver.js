@@ -10,10 +10,11 @@ var client_id = '4b5c02f8015941729381891f20c6f2a1'; // Your client id
 var client_secret = '2448387e7977426ca1b70ef5da956300'; // Your secret
 var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 
-var testInt = 0;
-var currentTrackInfo = {};
+var clientInt = 0;
 var clientJSON = '{"clients":{}}';
 var activeClients = [];
+var currentUser;
+var clientConn;
 
 /**
  * Generates a random string containing numbers and letters
@@ -93,7 +94,32 @@ app.get('/callback', function(req, res) {
         var access_token = body.access_token,
             refresh_token = body.refresh_token;
 
-        
+        var options = {
+          url: 'https://api.spotify.com/v1/me',
+          headers: { 'Authorization': 'Bearer ' + access_token },
+          json: true
+        };
+
+        request.get(options, function(error, response, body) {
+          if(body.display_name)
+          {
+            clientConn = body.display_name;
+          }
+          else{
+            clientConn = body.id;
+          }
+          server.on('connection',function(socket){
+            activeClients[clientInt]= clientConn;
+            clientInt = clientInt + 1;
+            console.log(activeClients);
+            socket.on('close',function(){
+              delete activeClients[clientInt];
+              clientInt = clientInt - 1;
+              console.log(activeClients);
+            }); 
+          });  
+          //console.log(clientConn);
+        });
 
         // we can also pass the token to the browser to make requests from there
         res.redirect('/#' +
@@ -109,14 +135,17 @@ app.get('/callback', function(req, res) {
       }
     });
   }
+
+
+  
 });
 
 app.post('/updateJSON', function(req, res){
 
   var obj = JSON.parse(clientJSON);
-  var user = req.body.userName;
+  currentUser = req.body.userName;
 
-  obj.clients[user] = req.body;
+  obj.clients[currentUser] = req.body;
   clientJSON = JSON.stringify(obj);
 });
 
@@ -148,17 +177,12 @@ app.get('/refresh_token', function(req, res) {
   });
 });
 
+
 console.log('Listening on 8888');
 
-
 var server = app.listen(8888);
-var io = require('socket.io').listen(server);
-io.sockets.on('connect', function(client){
-  activeClients.push(client);
-  console.log("  connect");
 
-  client.on('disconnect', function(){
-    activeClients.splice(activeClients.indexOf(client), 1);
-    console.log(activeClients + "  disconnect");
-  });
-});
+
+
+
+
