@@ -168,7 +168,7 @@
                   albumName = response.item.album.name;
                   progress = response.progress_ms;
                   songLength = response.timestamp;
-                  songURL = response.context.external_urls.spotify;
+                  songURL = response.item.external_urls;
                   isPlaying = response.is_playing;
 
 
@@ -204,11 +204,13 @@
                       });
                     }
 
+                    i = i + 1;
+
                     console.log(playbackArray);
 
                     getJSON();
                   }
-                  else if((playbackArray[i].albumArt != imgsrc && playbackArray[i].songName != songName))
+                  else if((playbackArray[0].albumArt != imgsrc && playbackArray[0].songName != songName))
                   {
                    
                     var startIndex = 0;
@@ -231,7 +233,7 @@
                     } 
 
                     getJSON();
-                    console.log(i + " " + playbackArray[i]);
+                    console.log(i + " " + playbackArray[0]);
                     //console.log(playbackArray);
 
                   }
@@ -262,6 +264,10 @@
               success: function(response){
                 var imgsrc = response.images[0].url;
                 currentUserName = response.display_name;
+                if(!currentUserName)
+                {
+                  currentUserName = response.id;
+                }
                 document.getElementById("profiler").src = imgsrc;
                 //console.log(currentUserName);
               }
