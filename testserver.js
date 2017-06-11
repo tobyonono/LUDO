@@ -13,6 +13,7 @@ var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 var testInt = 0;
 var currentTrackInfo = {};
 var clientJSON = '{"clients":{}}';
+var activeClients = [];
 
 /**
  * Generates a random string containing numbers and letters
@@ -32,6 +33,7 @@ var generateRandomString = function(length) {
 var stateKey = 'spotify_auth_state';
 
 var app = express();
+
 
 app.use(express.static(__dirname + '/public'))
    .use(cookieParser());
@@ -91,16 +93,7 @@ app.get('/callback', function(req, res) {
         var access_token = body.access_token,
             refresh_token = body.refresh_token;
 
-        var options = {
-          url: 'https://api.spotify.com/v1/me',
-          headers: { 'Authorization': 'Bearer ' + access_token },
-          json: true
-        };
-
-        // use the access token to access the Spotify Web API
-        request.get(options, function(error, response, body) {
-          console.log(response);
-        });
+        
 
         // we can also pass the token to the browser to make requests from there
         res.redirect('/#' +
@@ -123,12 +116,8 @@ app.post('/updateJSON', function(req, res){
   var obj = JSON.parse(clientJSON);
   var user = req.body.userName;
 
-  console.log(user + "server side");
-
   obj.clients[user] = req.body;
   clientJSON = JSON.stringify(obj);
-  
-  //console.log(clientJSON);
 });
 
 app.get('/getJSON', function(req, res){
@@ -160,4 +149,16 @@ app.get('/refresh_token', function(req, res) {
 });
 
 console.log('Listening on 8888');
-app.listen(8888);
+
+
+var server = app.listen(8888);
+var io = require('socket.io').listen(server);
+io.sockets.on('connect', function(client){
+  activeClients.push(client);
+  console.log("  connect");
+
+  client.on('disconnect', function(){
+    activeClients.splice(activeClients.indexOf(client), 1);
+    console.log(activeClients + "  disconnect");
+  });
+});

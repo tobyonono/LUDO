@@ -111,7 +111,7 @@
             var songLength;
             var songURL;
             var isPlaying;
-            var playbackArray = new Array();
+            var playbackArray = [];
             var i = 0;
 
             
@@ -186,7 +186,7 @@
                       isPlaying:isPlaying
                   };
 
-                  if(playbackArray.length < 1)
+                  if(playbackArray.length == 0)
                   {
                     playbackArray[i] = jsonPushData;
 
@@ -210,7 +210,7 @@
 
                     getJSON();
                   }
-                  else if((playbackArray[0].albumArt != imgsrc && playbackArray[0].songName != songName))
+                  else if((playbackArray[0].songName != songName))
                   {
                    
                     var startIndex = 0;
@@ -233,7 +233,7 @@
                     } 
 
                     getJSON();
-                    console.log(i + " " + playbackArray[0]);
+                    console.log(playbackArray);
                     //console.log(playbackArray);
 
                   }
