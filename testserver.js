@@ -99,22 +99,26 @@ app.get('/callback', function(req, res) {
         };
 
         request.get(options, function(error, response, body) {
+          var clientConn;
           if(body.display_name)
           {
-             var clientConn = body.display_name;
+             clientConn = body.display_name;
           }
           else{
             clientConn = body.id;
           }
-          server.on('connection',function(socket){
+          server.on('connection',function(client){
             var obj = JSON.parse(activeClients);
+            var testint = 5;
             obj.active[clientConn] = clientConn;
             activeClients = JSON.stringify(obj);
-            console.log(activeClients + " " + clientConn + " connected");
+            console.log(activeClients + " connected");
             
-            socket.on('close',function(){
-              delete activeClients.active[clientConn];
-              console.log(activeClients + " " + clientConn + " disconnected");
+            client.on('close',function(){
+              obj = JSON.parse(activeClients);
+              delete obj.active[clientConn];
+              activeClients = JSON.stringify(obj);
+              console.log(activeClients + " " + testint);
             }); 
           });  
           //console.log(clientConn);
@@ -179,9 +183,5 @@ app.get('/refresh_token', function(req, res) {
 
 console.log('Listening on 8888');
 
+
 var server = app.listen(8888);
-
-
-
-
-
