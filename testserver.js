@@ -57,6 +57,7 @@ app.get('/login', function(req, res) {
     }));
 });
 
+
 app.get('/callback', function(req, res) {
 
   // your application requests refresh and access tokens
@@ -98,8 +99,9 @@ app.get('/callback', function(req, res) {
           json: true
         };
 
+        /*
+
         request.get(options, function(error, response, body) {
-          var clientConn;
           if(body.display_name)
           {
              clientConn = body.display_name;
@@ -107,23 +109,9 @@ app.get('/callback', function(req, res) {
           else{
             clientConn = body.id;
           }
-          server.on('connection',function(client){
-            var obj = JSON.parse(activeClients);
-            var testint = 5;
-            obj.active[clientConn] = clientConn;
-            activeClients = JSON.stringify(obj);
-            console.log(activeClients + " connected");
-            
-            client.on('close',function(){
-              obj = JSON.parse(activeClients);
-              delete obj.active[clientConn];
-              activeClients = JSON.stringify(obj);
-              console.log(activeClients + " " + testint);
-            }); 
-          });  
-          //console.log(clientConn);
+          
         });
-
+        */
         // we can also pass the token to the browser to make requests from there
         res.redirect('/#' +
           querystring.stringify({
@@ -185,3 +173,20 @@ console.log('Listening on 8888');
 
 
 var server = app.listen(8888);
+server.on('connection', function(client){
+  var clientConn;
+  app.post('/addActiveUser', function(req, res){
+    clientConn = req.body.name;
+    var obj = JSON.parse(activeClients);
+    obj.active[clientConn] = clientConn;
+    activeClients = JSON.stringify(obj);
+    console.log(clientConn + " connected " + activeClients);
+    console.log(req.body.userName);
+  });
+  client.on('close',function(){
+    var obj = JSON.parse(activeClients);
+    delete obj.active[clientConn];
+    activeClients = JSON.stringify(obj);
+     console.log(clientConn + " disconnected " + activeClients);
+  }); 
+});  

@@ -272,6 +272,17 @@
                 //console.log(currentUserName);
               }
             });
+
+            $.ajax({
+              data:{"name": returnUser()},
+              url:'/addActiveUser',
+              method: "POST",
+              contentType: "application/json",
+              dataType: 'json',
+              success: function(response){
+              console.log(returnUser());
+              }
+            });
            }
 
            function getJSON()
