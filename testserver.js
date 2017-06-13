@@ -176,7 +176,7 @@ var server = app.listen(8888);
 server.on('connection', function(client){
   var clientConn;
   app.post('/addActiveUser', function(req, res){
-    clientConn = req.body.name;
+    clientConn = req.body.userNameData
     var obj = JSON.parse(activeClients);
     obj.active[clientConn] = clientConn;
     activeClients = JSON.stringify(obj);

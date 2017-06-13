@@ -46,7 +46,7 @@
 
 <script>
   (function() {
-
+        var paul = "Default";
         /**
          * Obtains parameters from the hash of the URL
          * @return Object
@@ -186,6 +186,7 @@
                       isPlaying:isPlaying
                   };
 
+
                   if(playbackArray.length == 0)
                   {
                     playbackArray[i] = jsonPushData;
@@ -255,6 +256,12 @@
 
            function displayUserInfo()
            {
+            var user = returnUser();
+            
+            userNameData = {
+              userName:user
+            };
+
             refreshToken();
             $.ajax({
               url: 'https://api.spotify.com/v1/me',
@@ -269,20 +276,19 @@
                   currentUserName = response.id;
                 }
                 document.getElementById("profiler").src = imgsrc;
-                //console.log(currentUserName);
+                var user = returnUser();
+                var userNameData = {userNameData:user}
+                $.ajax({
+                  data: JSON.stringify(userNameData),
+                  url:'/addActiveUser',
+                  method: "POST",
+                  contentType: "application/json",
+                  dataType: 'json',
+                  success: function(response){
+                  }
+                });
               }
-            });
-
-            $.ajax({
-              data:{"name": returnUser()},
-              url:'/addActiveUser',
-              method: "POST",
-              contentType: "application/json",
-              dataType: 'json',
-              success: function(response){
-              console.log(returnUser());
-              }
-            });
+            });  
            }
 
            function getJSON()
