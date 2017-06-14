@@ -173,8 +173,10 @@ console.log('Listening on 8888');
 
 
 var server = app.listen(8888);
-server.on('connection', function(client){
+server.on('connection', function(socket){
   var clientConn;
+  var client__fd = socket.fd;
+  console.log(client__fd + " cleint fd");
   app.post('/addActiveUser', function(req, res){
     clientConn = req.body.userNameData
     var obj = JSON.parse(activeClients);
@@ -183,7 +185,7 @@ server.on('connection', function(client){
     console.log(clientConn + " connected " + activeClients);
     console.log(req.body.userName);
   });
-  client.on('close',function(){
+  socket.on('close',function(){
     var obj = JSON.parse(activeClients);
     delete obj.active[clientConn];
     activeClients = JSON.stringify(obj);
