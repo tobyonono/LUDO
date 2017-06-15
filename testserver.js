@@ -5,6 +5,11 @@ var request = require('request'); // "Request" library
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = require('express-session');
+var redis = require('redis');
+var redisStore = require('connect-redis')(session);
+var client  = redis.createClient();
+
 
 var client_id = '4b5c02f8015941729381891f20c6f2a1'; // Your client id
 var client_secret = '2448387e7977426ca1b70ef5da956300'; // Your secret
@@ -39,6 +44,13 @@ app.use(express.static(__dirname + '/public'))
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+
+app.use(session({
+  secret: client_secret,
+  store: new redisStore({host: 'localhost', port:8888}),
+  saveUninitialized: false,
+  resave: false
+}));
 
 app.get('/login', function(req, res) {
 
@@ -99,19 +111,28 @@ app.get('/callback', function(req, res) {
           json: true
         };
 
-        /*
+        request.get(options, function(error, response, body){
+           if(body.display_name)
+           {
+             //if(!req.sessions.name)
+             {
+              //req.sessions.name = body.display_name;
+             } 
+           }
+           else
+           {
+            //if(!req.sessions.name)
+             {
+              //req.sessions.name = body.id;
+             } 
+           }
+        }); 
 
-        request.get(options, function(error, response, body) {
-          if(body.display_name)
-          {
-             clientConn = body.display_name;
-          }
-          else{
-            clientConn = body.id;
-          }
-          
-        });
-        */
+        console.log(req.session + "session test");
+
+
+
+       
         // we can also pass the token to the browser to make requests from there
         res.redirect('/#' +
           querystring.stringify({
@@ -135,9 +156,11 @@ app.post('/updateJSON', function(req, res){
 
   var obj = JSON.parse(clientJSON);
   var currentUser = req.body.userName;
-
   obj.clients[currentUser] = req.body;
   clientJSON = JSON.stringify(obj);
+  //express.session.store(req.sessionID, function(error, data){
+    //console.log(req.session.name + "check sessions");
+  //});
 });
 
 app.get('/getJSON', function(req, res){
@@ -173,7 +196,7 @@ console.log('Listening on 8888');
 
 
 var server = app.listen(8888);
-server.on('connection', function(socket){
+/*server.on('connection', function(socket){
   var clientConn;
   var client__fd = socket.fd;
   console.log(client__fd + " cleint fd");
@@ -192,3 +215,4 @@ server.on('connection', function(socket){
      console.log(clientConn + " disconnected " + activeClients);
   }); 
 });  
+*/
