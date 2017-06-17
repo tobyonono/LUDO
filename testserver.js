@@ -7,7 +7,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var redis = require('redis');
-var MongoStore = require('connect-mongo')(session);
+var redisStore = require('connect-redis')(session);
 
 
 var client_id = '4b5c02f8015941729381891f20c6f2a1'; // Your client id
@@ -17,11 +17,7 @@ var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 var clientJSON = '{"clients":{}}';
 var activeClients = '{"active":{}}';
 
-var sessionStore = new MongoStore({ 
-    host: 'localhost', 
-    port: '8888', 
-    collection: 'session', 
-    url: 'mongodb://localhost:8888/database'});
+var client = redis.createClient();
 
 
 /**
@@ -52,11 +48,10 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(session({
   secret: client_secret,
-  store: new MongoStore({
+  store: new redisStore({
     host: 'localhost', 
-    port: '8888', 
-    collection: 'session', 
-    url: 'mongodb://localhost:8888/database'}),
+    port: '8888',
+    client: client }),
   saveUninitialized: false,
   resave: false
 }));
@@ -87,6 +82,8 @@ app.get('/callback', function(req, res) {
   var code = req.query.code || null;
   var state = req.query.state || null;
   var storedState = req.cookies ? req.cookies[stateKey] : null;
+  req.sessions.test = 1;
+  console.log(req.sessions.test);
 
   if (state === null || state !== storedState) {
     res.redirect('/#' +
@@ -123,17 +120,16 @@ app.get('/callback', function(req, res) {
         request.get(options, function(error, response, body){
            if(body.display_name)
            {
-             //if(!req.sessions.name)
-             {
-              //req.sessions.name = body.display_name;
-             } 
+              req.sessions.name = body.display_name;
+              console.log(req.sessions.name);
+             
            }
            else
            {
             //if(!req.sessions.name)
-             {
+             //{
               //req.sessions.name = body.id;
-             } 
+             //} 
            }
         }); 
 
@@ -167,9 +163,9 @@ app.post('/updateJSON', function(req, res){
   var currentUser = req.body.userName;
   obj.clients[currentUser] = req.body;
   clientJSON = JSON.stringify(obj);
-  //express.session.store(req.sessionID, function(error, data){
-    //console.log(req.session.name + "check sessions");
-  //});
+  express.session.store(req.sessionID, function(error, data){
+    console.log(req.session.name + "check sessions");
+  });
 });
 
 app.get('/getJSON', function(req, res){
