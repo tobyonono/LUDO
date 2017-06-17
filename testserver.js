@@ -7,8 +7,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var redis = require('redis');
-var redisStore = require('connect-redis')(session);
-var client  = redis.createClient();
+var MongoStore = require('connect-mongo')(session);
 
 
 var client_id = '4b5c02f8015941729381891f20c6f2a1'; // Your client id
@@ -17,6 +16,12 @@ var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 
 var clientJSON = '{"clients":{}}';
 var activeClients = '{"active":{}}';
+
+var sessionStore = new MongoStore({ 
+    host: 'localhost', 
+    port: '8888', 
+    collection: 'session', 
+    url: 'mongodb://localhost:8888/database'});
 
 
 /**
@@ -47,7 +52,11 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(session({
   secret: client_secret,
-  store: new redisStore({host: 'localhost', port:8888}),
+  store: new MongoStore({
+    host: 'localhost', 
+    port: '8888', 
+    collection: 'session', 
+    url: 'mongodb://localhost:8888/database'}),
   saveUninitialized: false,
   resave: false
 }));
