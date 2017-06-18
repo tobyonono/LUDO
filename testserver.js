@@ -71,6 +71,9 @@ app.get('/login', function(req, res) {
       redirect_uri: redirect_uri,
       state: state
     }));
+
+  req.session.test = 1;
+  console.log(req.session.test);
 });
 
 
@@ -78,12 +81,12 @@ app.get('/callback', function(req, res) {
 
   // your application requests refresh and access tokens
   // after checking the state parameter
-
+  var name;
   var code = req.query.code || null;
   var state = req.query.state || null;
   var storedState = req.cookies ? req.cookies[stateKey] : null;
-  req.sessions.test = 1;
-  console.log(req.sessions.test);
+  //req.sessions.test = 1;
+  console.log(req.cookies[stateKey] + "jsdjksdb");
 
   if (state === null || state !== storedState) {
     res.redirect('/#' +
@@ -120,20 +123,17 @@ app.get('/callback', function(req, res) {
         request.get(options, function(error, response, body){
            if(body.display_name)
            {
-              req.sessions.name = body.display_name;
-              console.log(req.sessions.name);
-             
+              req.session.name = body.display_name;
+              console.log(req.session.name); 
            }
            else
            {
-            //if(!req.sessions.name)
-             //{
-              //req.sessions.name = body.id;
-             //} 
+              req.session.name = body.id;
+              console.log(req.session.name);
            }
         }); 
 
-        console.log(req.session + "session test");
+        
 
 
 
@@ -153,7 +153,9 @@ app.get('/callback', function(req, res) {
     });
   }
 
-
+        console.log(req.session + "session test");
+        req.session.name = 4;
+        console.log(name);
   
 });
 
