@@ -257,6 +257,7 @@
            function displayUserInfo()
            {
             var user = returnUser();
+            var i = 0;
             
             userNameData = {
               userName:user
@@ -277,8 +278,12 @@
                 }
                 document.getElementById("profiler").src = imgsrc;
                 var user = returnUser();
-                var userNameData = {userNameData:user}
-                $.ajax({
+                
+                
+                if(user)
+                {
+                  var userNameData = {userNameData:user};
+                  $.ajax({
                   data: JSON.stringify(userNameData),
                   url:'/addActiveUser',
                   method: "POST",
@@ -287,6 +292,12 @@
                   success: function(response){
                   }
                 });
+                  i++;
+                  console.log(i);
+
+                }
+                
+
               }
             });  
            }
