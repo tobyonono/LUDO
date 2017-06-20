@@ -33,6 +33,9 @@
         <figcaption id="albumName"></figcaption> 
        </div>
       </div>
+
+      <input type="checkbox" id="toggle" /><label for="toggle">Toggle</label>
+
       <div class="player">
        <input type="image" id="previous" src="http://freeiconbox.com/icon/256/20648.png" class="invert" width="25" height="25" />
        <input type="image" name="play-pause" src="https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_play_arrow_48px-512.png" class="invert" width="25" height="25" />
@@ -280,22 +283,7 @@
                 var user = returnUser();
                 
                 
-                if(user)
-                {
-                  var userNameData = {userNameData:user};
-                  $.ajax({
-                  data: JSON.stringify(userNameData),
-                  url:'/addActiveUser',
-                  method: "POST",
-                  contentType: "application/json",
-                  dataType: 'json',
-                  success: function(response){
-                  }
-                });
-                  i++;
-                  console.log(i);
-
-                }
+                
                 
 
               }
@@ -319,6 +307,25 @@
             return currentUser;
            }
 
+           document.getElementById('toggle').addEventListener('click', function()
+           {
+            var user = returnUser();
+            var live = this.checked;
+            var userNameData = {userNameData:user, active:live};
+            console.log(userNameData);
+            $.ajax({
+              data: JSON.stringify(userNameData),
+              url:'/updateUserStatus',
+              method:'POST',
+              contentType: 'application/json',
+              dataType: 'json',
+              success: function(response){
+                console.log('updated');
+              }
+            });
+           });
+
+    
             document.getElementById('previous').addEventListener('click', function() 
             {
               refreshToken();
@@ -331,7 +338,7 @@
                 success: function(){
                   console.log("it skipped");
                 }
-              })
+              });
             });
 
             document.getElementById('fast-forward').addEventListener('click', function() 
@@ -342,7 +349,7 @@
                 success: function(){
                   console.log("IT SHOULD HAVE DONE SOMETHING");
                 }
-              })
+              });
             });
 
            //}

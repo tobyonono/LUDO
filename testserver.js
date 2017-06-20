@@ -5,9 +5,6 @@ var request = require('request'); // "Request" library
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var session = require('express-session');
-var redis = require('redis');
-var redisStore = require('connect-redis')(session);
 var jsonfile = require('jsonfile');
 var http = require('http');
 
@@ -19,7 +16,6 @@ var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 var clientJSON = '{"clients":{}}';
 var activeClients = '{"active":{}}';
 
-var client = redis.createClient();
 
 
 /**
@@ -48,16 +44,6 @@ app.use(express.static(__dirname + '/public'))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
-app.use(session({
-  secret: client_secret,
-  store: new redisStore({
-    host: 'localhost', 
-    port: '9999',
-    client: client,
-    ttl: 30 }),
-  saveUninitialized: false,
-  resave: false
-}));
 
 app.get('/login', function(req, res) {
 
@@ -118,31 +104,7 @@ app.get('/callback', function(req, res) {
 
         var access_token = body.access_token,
             refresh_token = body.refresh_token;
-
-        var options = {
-          url: 'https://api.spotify.com/v1/me',
-          headers: { 'Authorization': 'Bearer ' + access_token },
-          json: true
-        };
-
-        request.get(options, function(error, response, body){
-           if(body.display_name)
-           {
-              req.session.name = body.display_name;
-              //console.log(req.session.name + " inside if statements"); 
-           }
-           else
-           {
-              req.session.name = body.id;
-              //console.log(req.session.name);
-           }
-        }); 
-
-        
-
-
-
-       
+     
         // we can also pass the token to the browser to make requests from there
         res.redirect('/#' +
           querystring.stringify({
@@ -157,10 +119,7 @@ app.get('/callback', function(req, res) {
       }
     });
   }
-
-        //console.log(req.session.name + " session test 4343434");
-
-        
+      
   
 });
 
@@ -203,40 +162,33 @@ app.get('/refresh_token', function(req, res) {
   });
 });
 
+app.post('/updateUserStatus', function(req, res){
+  var obj = JSON.parse(activeClients);
+  var currentUser = req.body.userNameData;
+  var live = req.body.active;
+
+  console.log(live);
+
+  if(live)
+  {
+    obj.active[currentUser] = live;
+    //console.log(live + " active");
+    //console.log(currentUser + " currentUser");
+    //console.log(activeClients)
+  }
+
+  else
+  {
+    delete obj.active[currentUser];
+  }
+  
+  activeClients = JSON.stringify(obj);
+  console.log(activeClients);
+});
+
 
 console.log('Listening on 8888');
 
 
 var server = http.createServer(app);
 server.listen(8888);
-server.once('connection', function(socket){
-  var clientConn;
-  var client__fd = socket.fd;
-  //console.log(client__fd + " cleint fd");
-  app.post('/addActiveUser', function(req, res){
-    if(req.body.userNameData)
-    {
-       var obj = {active: []};
-      file = 'activeClients.json';
-      clientConn = req.body.userNameData;
-      obj.active.push({client: clientConn});
-      var json = JSON.stringify(obj);
-      jsonfile.writeFile(file, json, {flag: 'a'},function (err){
-        //console.error(err);
-      });
-    }
-   
-    //var obj = JSON.parse(activeClients);
-    //obj.active[clientConn] = clientConn;
-    //activeClients = JSON.stringify(obj);
-    //console.log(clientConn + " connected " + activeClients);
-    console.log(clientConn + " bdjfksjf");
-  });
-  socket.once('disconnect',function(){
-    //var obj = JSON.parse(activeClients);
-    //delete obj.active[clientConn];
-    //activeClients = JSON.stringify(obj);
-     console.log(clientConn + " disconnected ");
-     process.nextTick(socket.destroy());
-  }); 
-});  

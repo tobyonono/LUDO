@@ -30,10 +30,7 @@ body{
 }
 
 
-#broadcast{
-	color: #b32200;
-	float: left;
-}
+
 
 #profiler{
 	border-radius: 50%;
@@ -42,13 +39,6 @@ body{
 	margin: 0;
 }
 
-.profInfo{
-	font-family: 'Montserrat', sans-serif;
-	color: #b32200;
-	font-size: 12px;
-	float: right;
-	display: inline-block;
-}
 
 h2{
 	font-family: 'Montserrat', sans-serif;
@@ -71,7 +61,7 @@ h2{
 
 
 #getCurrentTrack{
-	font-family: "Montserrat", sans-serif;
+	font-family: "Montserrat";
 	font-weight: bold;
 	text-transform: uppercase;
 	font-size: 9px;
@@ -126,4 +116,46 @@ div .input{
 
 input:hover{
    -webkit-filter: invert(70%); filter: invert(70%);
+}
+
+input[type=checkbox]{
+	height: 0;
+	width: 0;
+	visibility: hidden;
+}
+
+label {
+	cursor: pointer;
+	text-indent: -9999px;
+	width: 50px;
+	height: 25px;
+	background: grey;
+	display: block;
+	border-radius: 25px;
+	position: relative;
+}
+
+label:after {
+	content: '';
+	position: absolute;
+	top: 1.25px;
+	left: 1.25px;
+	width: 22.5px;
+	height: 22.5px;
+	background: #fff;
+	border-radius: 22.5px;
+	transition: 0.3s;
+}
+
+input:checked + label {
+	background: #b32200;
+}
+
+input:checked + label:after {
+	left: calc(100% - 1.25px);
+	transform: translateX(-100%);
+}
+
+label:active:after {
+	width: 32.5px;
 }
