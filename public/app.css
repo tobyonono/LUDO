@@ -1,5 +1,7 @@
 body{
 	background: black;
+	height: 100%;
+	margin: 0;
 }
 
 #login{
@@ -17,6 +19,7 @@ body{
 
 #loggedin h1{
 	/*text-align: center;*/
+	height: 100%;
 	font-size: 50px;
 	color: white;
 	padding-bottom: 2.5%;
@@ -28,6 +31,31 @@ body{
 	width: 100%;
 	
 }
+
+.grid{
+	float: left;
+	height: 100%;
+	width: 100%;
+}
+
+.left{
+	width: 33.3333333%;
+	height: 100%;
+	float: left;
+	background-color: #A9A9A9;
+}
+
+.center{
+	width: 33.3333333%;
+	height: 100%;
+	float: left;
+}
+.right{
+	width: 33.3333333%;
+	height: 100%;
+	float: left;
+}
+
 
 
 

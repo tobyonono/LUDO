@@ -36,6 +36,9 @@ var generateRandomString = function(length) {
 var stateKey = 'spotify_auth_state';
 
 var app = express();
+var server = require('http').createServer(app);
+var io = require('socket.io').listen(server);
+
 
 
 app.use(express.static(__dirname + '/public'))
@@ -136,7 +139,11 @@ app.post('/updateJSON', function(req, res){
 
 app.get('/getJSON', function(req, res){
   res.json(clientJSON);
-})
+});
+
+app.get('/showLive', function(req, res){
+  res.json(activeClients);
+});
 
 app.get('/refresh_token', function(req, res) {
 
@@ -189,6 +196,9 @@ app.post('/updateUserStatus', function(req, res){
 
 console.log('Listening on 8888');
 
-
-var server = http.createServer(app);
 server.listen(8888);
+
+io.sockets.on('connection', function (socket) {
+    console.log("Connected succesfully to the socket ...");
+});
+
