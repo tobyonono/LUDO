@@ -40,20 +40,20 @@ body{
 }
 
 .grid{
+	overflow: auto;
 	display: grid;
-	grid-template-columns: 20% 50% 30%;
+	grid-template-columns: 10% 60% 30%;
 	background-color: white;
-	grid-template-rows: 100vh;
+	grid-template-rows: 100%;
 	grid-column-gap: 10px;
 }
 
-.box{
-	background-color: #444;
-}
 
 
 .left{
 	grid-column: 1;
+	overflow: auto;
+	height: 100%;
 }
 
 .center{
@@ -66,16 +66,20 @@ body{
 }
 
 .profTemp{
-	height: 70px;
-	text-align: center;
+	font-family: 'Cousine', monospace;
+	font-size: 12px;
+	font-weight: bold;
+	margin-top: 10px;
+	height: 60px;
+	margin-left: 15px;
 	
 }
 
 .profTemp img{
+	margin-left: 0px;
 	border-radius: 50%;
 	padding: 0;
-	margin-right: 15px;
-	float: left;
+	margin-right: 10px;
 	vertical-align: middle;
 }
 
