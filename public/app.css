@@ -74,6 +74,19 @@ body{
 	
 }
 
+.profTemp:hover{
+	color: #ce6360;
+	cursor: pointer;
+}
+
+.profTemp:selection{
+	color: blue;
+	cursor: pointer;
+}
+
+
+
+
 .profTemp img{
 	margin-left: 0px;
 	border-radius: 50%;
