@@ -2,88 +2,93 @@
 <html>
 
 <head>
-  <title>LUDO</title>
-  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-  <link href="https://fonts.googleapis.com/css?family=Monoton" rel="stylesheet" media>
-  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" media>
-  <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
-  <link href="app.css" rel="stylesheet" />
+    <title>LUDO</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link href="//fonts.googleapis.com/css?family=Monoton" rel="stylesheet" media>
+    <link href="//fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" media>
+    <link href="//fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
+    <link href="//fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
+    <link href="app.css" rel="stylesheet" />
 </head>
 
 <body>
     <div id="login">
-      <h1>LUDO</h1>
-      <a href="/login"><img src="http://www.iconsplace.com/icons/preview/black/spotify-256.png" class="invert" width="40" height="40" /></a>
-      <h2>L O G I N</h2>
+        <h1>LUDO</h1>
+        <a href="/login"><img src="http://www.iconsplace.com/icons/preview/black/spotify-256.png" class="invert" width="40" height="40" /></a>
+        <h2>L O G I N</h2>
     </div>
     <div id="loggedin">
-      <div class="grid">
-        <div class="left">text
-        </div>
-        <div class="center">
-          <h1>LUDO<img id="profiler" width="40" height="40" /> 
-          </h1>
-          <div id="getCurrentTrack">
-            <div id="trackTemplate">
-              <img id="trackimg" width="250" height="250" />
-              <figcaption id="songName"></figcaption>
-              <figcaption id="artistName"></figcaption>
-              <figcaption id="albumName"></figcaption>
+        <div class="grid">
+            <div class="left">
+              <div class="profTemp">
+                <img id="profiler" width="40" height="40" />
+                <p>Toby Onono</p>
+              </div>
+
+
             </div>
-          </div>
-          <input type="checkbox" id="toggle" />
-          <label for="toggle">Toggle</label>
-          <div class="player">
-            <input type="image" id="previous" src="http://freeiconbox.com/icon/256/20648.png" class="invert" width="25" height="25" />
-            <input type="image" name="play-pause" src="https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_play_arrow_48px-512.png" class="invert" width="25" height="25" />
-            <input type="image" id="fast-forward" src="http://freeiconbox.com/icon/256/20648.png" class="flip" width="25" height="25" />
-          </div>
+            <div class="center">
+                <h1>LUDO<img id="profiler" width="40" height="40" /> 
+                </h1>
+                <div id="getCurrentTrack">
+                    <div id="trackTemplate">
+                        <img id="trackimg" width="250" height="250" />
+                        <figcaption id="songName"></figcaption>
+                        <figcaption id="artistName"></figcaption>
+                        <figcaption id="albumName"></figcaption>
+                    </div>
+                </div>
+                <input type="checkbox" id="toggle" />
+                <label for="toggle">Toggle</label>
+                <div class="player">
+                    <input type="image" id="previous" src="http://freeiconbox.com/icon/256/20648.png" class="invert" width="25" height="25" />
+                    <input type="image" name="play-pause" src="https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_play_arrow_48px-512.png" class="invert" width="25" height="25" />
+                    <input type="image" id="fast-forward" src="http://freeiconbox.com/icon/256/20648.png" class="flip" width="25" height="25" />
+                </div>
+            </div>
+            <div class="right">R
+            </div>
         </div>
-        <div class="right">text
-        </div>
-      </div>
     </div>
-</div>
-<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-<script>
-  (function() {
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script>
+    (function() {
         /**
          * Obtains parameters from the hash of the URL
          * @return Object
          */
-         function getHashParams() {
-          var hashParams = {};
-          var e, r = /([^&;=]+)=?([^&;]*)/g,
-          q = window.location.hash.substring(1);
-          while (e = r.exec(q)) {
-            hashParams[e[1]] = decodeURIComponent(e[2]);
-          }
-          return hashParams;
+        function getHashParams() {
+            var hashParams = {};
+            var e, r = /([^&;=]+)=?([^&;]*)/g,
+                q = window.location.hash.substring(1);
+            while (e = r.exec(q)) {
+                hashParams[e[1]] = decodeURIComponent(e[2]);
+            }
+            return hashParams;
         }
 
 
         var params = getHashParams();
 
         var access_token = params.access_token,
-        refresh_token = params.refresh_token,
-        error = params.error;
+            refresh_token = params.refresh_token,
+            error = params.error;
 
         function refreshToken() {
-          $.ajax({
-            url: '/refresh_token',
-            data: {
-              'refresh_token': refresh_token
-            }
-          }).done(function(data) {
-            access_token = data.access_token;
-          });
+            $.ajax({
+                url: '/refresh_token',
+                data: {
+                    'refresh_token': refresh_token
+                }
+            }).done(function(data) {
+                access_token = data.access_token;
+            });
         }
 
         if (error) {
-          alert('There was an error during the authentication');
+            alert('There was an error during the authentication');
         } else {
-          if (access_token) {
+            if (access_token) {
 
                 /*$.ajax({
                     url: 'https://api.spotify.com/v1/me',
@@ -113,33 +118,33 @@
 
 
                 var jsonPushData = {
-                  userName: currentUserName,
-                  albumArt: imgsrc,
-                  songName: songName,
-                  artistName: artistName,
-                  albumName: albumName,
-                  songProgress: progress,
-                  songLength: songLength,
-                  songURL: songURL,
-                  isPlaying: isPlaying
+                    userName: currentUserName,
+                    albumArt: imgsrc,
+                    songName: songName,
+                    artistName: artistName,
+                    albumName: albumName,
+                    songProgress: progress,
+                    songLength: songLength,
+                    songURL: songURL,
+                    isPlaying: isPlaying
                 };
 
 
 
                 function showPlayBackHistory(playbackArray) {
-                  var image = document.createElement('img');
-                  var song = document.createElement('figcaption');
-                  var artist = document.createElement('figcaption');
-                  var album1 = document.createElement('figcaption');
+                    var image = document.createElement('img');
+                    var song = document.createElement('figcaption');
+                    var artist = document.createElement('figcaption');
+                    var album1 = document.createElement('figcaption');
 
-                  image.src = playbackArray[1].imgURL;
-                  song.textContent = playbackArray[1].nameOfSong;
-                  artist.textContent = playbackArray[1].artistName;
-                  album1 = playbackArray[1].nameOfAlbum;
+                    image.src = playbackArray[1].imgURL;
+                    song.textContent = playbackArray[1].nameOfSong;
+                    artist.textContent = playbackArray[1].artistName;
+                    album1 = playbackArray[1].nameOfAlbum;
 
-                  var template = document.getElementById('trackTemplate');
-                  template.appendChild(image, song, artist, album1);
-                  console.log(template + "TEMPLATE");
+                    var template = document.getElementById('trackTemplate');
+                    template.appendChild(image, song, artist, album1);
+                    console.log(template + "TEMPLATE");
 
                 }
 
@@ -150,204 +155,204 @@
                 function getCurrentSong() {
 
 
-                  $.ajax({
-                    url: 'https://api.spotify.com/v1/me/player/currently-playing',
-                    headers: {
-                      'Authorization': 'Bearer ' + access_token
-                    },
-                    success: function(response) {
+                    $.ajax({
+                        url: 'https://api.spotify.com/v1/me/player/currently-playing',
+                        headers: {
+                            'Authorization': 'Bearer ' + access_token
+                        },
+                        success: function(response) {
 
-                      imgsrc = response.item.album.images[0].url;
-                      songName = response.item.name;
-                      artistName = response.item.artists[0].name;
-                      albumName = response.item.album.name;
-                      progress = response.progress_ms;
-                      songLength = response.timestamp;
-                      songURL = response.item.external_urls;
-                      isPlaying = response.is_playing;
-
-
-                      var user = returnUser();
-
-                      jsonPushData = {
-                        userName: user,
-                        albumArt: imgsrc,
-                        songName: songName,
-                        artistName: artistName,
-                        albumName: albumName,
-                        songProgress: progress,
-                        songLength: songLength,
-                        songURL: songURL,
-                        isPlaying: isPlaying
-                      };
+                            imgsrc = response.item.album.images[0].url;
+                            songName = response.item.name;
+                            artistName = response.item.artists[0].name;
+                            albumName = response.item.album.name;
+                            progress = response.progress_ms;
+                            songLength = response.timestamp;
+                            songURL = response.item.external_urls;
+                            isPlaying = response.is_playing;
 
 
-                      if (playbackArray.length == 0) {
-                        playbackArray[i] = jsonPushData;
+                            var user = returnUser();
 
-                        if (user) {
-                          $.ajax({
-                            data: JSON.stringify(jsonPushData),
-                            url: '/updateJSON',
-                            method: "POST",
-                            contentType: "application/json",
-                            dataType: 'json',
-                            success: function(response) {
+                            jsonPushData = {
+                                userName: user,
+                                albumArt: imgsrc,
+                                songName: songName,
+                                artistName: artistName,
+                                albumName: albumName,
+                                songProgress: progress,
+                                songLength: songLength,
+                                songURL: songURL,
+                                isPlaying: isPlaying
+                            };
+
+
+                            if (playbackArray.length == 0) {
+                                playbackArray[i] = jsonPushData;
+
+                                if (user) {
+                                    $.ajax({
+                                        data: JSON.stringify(jsonPushData),
+                                        url: '/updateJSON',
+                                        method: "POST",
+                                        contentType: "application/json",
+                                        dataType: 'json',
+                                        success: function(response) {
                                             //console.log(currentUserName);
-                                          }
-                                        });
-                        }
+                                        }
+                                    });
+                                }
 
-                        i = i + 1;
+                                i = i + 1;
 
-                        console.log(playbackArray);
+                                console.log(playbackArray);
 
-                        getJSON();
-                      } else if ((playbackArray[0].songName != songName)) {
+                                getJSON();
+                            } else if ((playbackArray[0].songName != songName)) {
 
-                        var startIndex = 0;
-                        var numElemtoRemove = 0;
-                        playbackArray.splice(startIndex, numElemtoRemove, jsonPushData);
-                        i = i + 1;
+                                var startIndex = 0;
+                                var numElemtoRemove = 0;
+                                playbackArray.splice(startIndex, numElemtoRemove, jsonPushData);
+                                i = i + 1;
 
-                        if (user) {
-                          $.ajax({
-                            data: JSON.stringify(jsonPushData),
-                            url: '/updateJSON',
-                            method: "POST",
-                            contentType: "application/json",
-                            dataType: 'json',
-                            success: function(response) {
+                                if (user) {
+                                    $.ajax({
+                                        data: JSON.stringify(jsonPushData),
+                                        url: '/updateJSON',
+                                        method: "POST",
+                                        contentType: "application/json",
+                                        dataType: 'json',
+                                        success: function(response) {
                                             //console.log(currentUserName);
-                                          }
-                                        });
-                        }
+                                        }
+                                    });
+                                }
 
-                        getJSON();
-                        console.log(playbackArray);
+                                getJSON();
+                                console.log(playbackArray);
                                 //console.log(playbackArray);
 
-                              }
+                            }
 
-                              document.getElementById("trackimg").src = imgsrc;
-                              document.getElementById("songName").innerHTML = songName;
-                              document.getElementById("artistName").innerHTML = artistName;
-                              document.getElementById("albumName").innerHTML = albumName;
+                            document.getElementById("trackimg").src = imgsrc;
+                            document.getElementById("songName").innerHTML = songName;
+                            document.getElementById("artistName").innerHTML = artistName;
+                            document.getElementById("albumName").innerHTML = albumName;
                             //console.log(response);
 
 
 
                             $('#login').hide();
                             $('#loggedin').show();
-                          }
-                        });
-                  setTimeout(getCurrentSong, 20000);
+                        }
+                    });
+                    setTimeout(getCurrentSong, 20000);
                 }
 
                 function displayUserInfo() {
-                  refreshToken();
-                  $.ajax({
-                    url: 'https://api.spotify.com/v1/me',
-                    headers: {
-                      'Authorization': 'Bearer ' + access_token
-                    },
-                    success: function(response) {
-                      profiler = response.images[0].url;
-                      currentUserName = response.display_name;
-                      if (!currentUserName) {
-                        currentUserName = response.id;
-                      }
-                      document.getElementById("profiler").src = profiler;
-                    }
-                  });
+                    refreshToken();
+                    $.ajax({
+                        url: 'https://api.spotify.com/v1/me',
+                        headers: {
+                            'Authorization': 'Bearer ' + access_token
+                        },
+                        success: function(response) {
+                            profiler = response.images[0].url;
+                            currentUserName = response.display_name;
+                            if (!currentUserName) {
+                                currentUserName = response.id;
+                            }
+                            document.getElementById("profiler").src = profiler;
+                        }
+                    });
                 }
 
                 function getJSON() {
-                  $.ajax({
-                    url: '/getJSON',
-                    dataType: 'json',
-                    success: function(response) {
-                      console.log(response);
-                    }
-                  });
+                    $.ajax({
+                        url: '/getJSON',
+                        dataType: 'json',
+                        success: function(response) {
+                            console.log(response);
+                        }
+                    });
                 }
 
                 function getActiveUsers() {
-                  $.ajax({
-                    url: '/getJSON',
-                    dataType: 'json',
-                    success: function(response) {
-                      console.log(response);
-                    }
-                  });
+                    $.ajax({
+                        url: '/getJSON',
+                        dataType: 'json',
+                        success: function(response) {
+                            console.log(response);
+                        }
+                    });
                 }
 
 
                 function returnUser() {
-                  return currentUserName;
+                    return currentUserName;
                 }
 
                 function returnProfiler() {
-                  return profiler;
+                    return profiler;
                 }
                 document.getElementById('toggle').addEventListener('click', function() {
-                  var user = returnUser();
-                  var profiler = returnProfiler();
-                  console.log(profiler);
-                  var live = this.checked;
-                  var userNameData = {
-                    userNameData: user,
-                    active: live,
-                    profiler: profiler
-                  };
-                  console.log(userNameData);
-                  $.ajax({
-                    data: JSON.stringify(userNameData),
-                    url: '/updateUserStatus',
-                    method: 'POST',
-                    contentType: 'application/json',
-                    dataType: 'json',
-                    success: function(response) {
-                      console.log('updated');
-                    }
-                  });
+                    var user = returnUser();
+                    var profiler = returnProfiler();
+                    console.log(profiler);
+                    var live = this.checked;
+                    var userNameData = {
+                        userNameData: user,
+                        active: live,
+                        profiler: profiler
+                    };
+                    console.log(userNameData);
+                    $.ajax({
+                        data: JSON.stringify(userNameData),
+                        url: '/updateUserStatus',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        dataType: 'json',
+                        success: function(response) {
+                            console.log('updated');
+                        }
+                    });
                 });
 
 
                 document.getElementById('previous').addEventListener('click', function() {
-                  refreshToken();
-                  $.ajax({
-                    url: 'https://api.spotify.com/v1/me/player/previous',
-                    type: 'POST',
-                    headers: {
-                      'Authorization': 'Bearer ' + access_token
-                    },
-                    success: function() {
-                      console.log("it skipped");
-                    }
-                  });
+                    refreshToken();
+                    $.ajax({
+                        url: 'https://api.spotify.com/v1/me/player/previous',
+                        type: 'POST',
+                        headers: {
+                            'Authorization': 'Bearer ' + access_token
+                        },
+                        success: function() {
+                            console.log("it skipped");
+                        }
+                    });
                 });
 
                 document.getElementById('fast-forward').addEventListener('click', function() {
-                  $.ajax({
-                    url: '/test',
-                    type: 'GET',
-                    success: function() {
-                      console.log("IT SHOULD HAVE DONE SOMETHING");
-                    }
-                  });
+                    $.ajax({
+                        url: '/test',
+                        type: 'GET',
+                        success: function() {
+                            console.log("IT SHOULD HAVE DONE SOMETHING");
+                        }
+                    });
                 });
 
                 //}
 
-              } else {
+            } else {
                 // render initial screen
                 $('#login').show();
                 $('#loggedin').hide();
-              }
             }
-          })();
-        </script>
-      </body>
+        }
+    })();
+    </script>
+</body>
 
-      </html>
+</html>
