@@ -30,7 +30,6 @@ body{
 	font-size: 50px;
 	color: white;
 	padding-bottom: 2.5%;
-	padding-left: 50px;
 }
 
 
@@ -40,12 +39,13 @@ body{
 }
 
 .grid{
-	overflow: auto;
 	display: grid;
-	grid-template-columns: 10% 60% 30%;
+	grid-template-columns: 12% 76% 12%;
 	background-color: white;
 	grid-template-rows: 100%;
 	grid-column-gap: 10px;
+	height: 100vh;
+	overflow: hidden;
 }
 
 
@@ -53,7 +53,6 @@ body{
 .left{
 	grid-column: 1;
 	overflow: auto;
-	height: 100%;
 }
 
 .center{
@@ -120,6 +119,7 @@ h2{
 	text-transform: uppercase;
 	font-size: 9px;
 	text-align: center;
+	vertical-align: middle;
 }
 
 #trackTemplate{
@@ -213,3 +213,23 @@ input:checked + label:after {
 label:active:after {
 	width: 32.5px;
 }
+
+
+::-webkit-scrollbar-track
+{
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar
+{
+  width: 5px;
+  background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb
+{
+  background-color: #262626;
+  
+}
+
