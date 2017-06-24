@@ -13,8 +13,8 @@ var client_id = '4b5c02f8015941729381891f20c6f2a1'; // Your client id
 var client_secret = '2448387e7977426ca1b70ef5da956300'; // Your secret
 var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 
-var clientJSON = '{"clients":{}}';
-var activeClients = '{"active":{}}';
+var clientJSON = '{"clients":[]}';
+var activeClients = '{"active":[]}';
 
 
 
@@ -129,19 +129,30 @@ app.get('/callback', function(req, res) {
 app.post('/updateJSON', function(req, res){
 
   var obj = JSON.parse(clientJSON);
-  var currentUser = req.body.userName;
-  obj.clients[currentUser] = req.body;
+  var exists = false;
+  for(var i = 0; i < obj.clients.length; i++)
+    {
+      if(obj.clients[i].username == req.body.username)
+      {
+        obj.clients[i] = req.body;
+        exists = true;
+      }
+    }
+
+    if(exists == false){
+      obj.clients.push(req.body);
+    }
+  
   clientJSON = JSON.stringify(obj);
-  //store.destroy(req.sessionID, function(error, data){
-    //console.log(req.session.name + "check sessions");
-  //});
 });
 
 app.get('/getJSON', function(req, res){
+  res.setHeader('Content-Type', 'application/json');
   res.json(clientJSON);
 });
 
 app.get('/showLive', function(req, res){
+  res.setHeader('Content-Type', 'application/json');
   res.json(activeClients);
 });
 
@@ -173,20 +184,32 @@ app.post('/updateUserStatus', function(req, res){
   var obj = JSON.parse(activeClients);
   var currentUser = req.body.userNameData;
   var live = req.body.active;
-
-  console.log(live);
+  var freshUser = false;
 
   if(live)
   {
-    obj.active[currentUser] = live;
-    //console.log(live + " active");
-    //console.log(currentUser + " currentUser");
-    //console.log(activeClients)
+    for(var i = 0; i < obj.active.length; i++)
+    {
+      if(obj.active[i].userNameData == currentUser)
+      {
+        obj.active[i] = req.body;
+        freshUser = true;
+      }
+    }
+    if(freshUser == false)
+    {
+      obj.active.push(req.body);
+    }   
   }
-
   else
   {
-    delete obj.active[currentUser];
+    for(var i = 0; i < obj.active.length; i++)
+    {
+      if(obj.active[i].userNameData == currentUser)
+      {
+        obj.active.splice(i, 1);
+      }
+    }
   }
   
   activeClients = JSON.stringify(obj);
@@ -195,10 +218,6 @@ app.post('/updateUserStatus', function(req, res){
 
 
 console.log('Listening on 8888');
-
 server.listen(8888);
 
-io.sockets.on('connection', function (socket) {
-    console.log("Connected succesfully to the socket ...");
-});
 
