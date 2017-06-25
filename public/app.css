@@ -128,7 +128,7 @@ h2{
 
 
 
-#getCurrentTrack{
+.getCurrentTrack{
 	font-family: "Montserrat";
 	font-weight: bold;
 	text-transform: uppercase;
@@ -138,7 +138,8 @@ h2{
 
 }
 
-#trackTemplate{
+.trackTemplate{
+	font-family: "Montserrat";
 	text-align: left;
 	display: inline-block;
 	max-width: 400px;
@@ -168,13 +169,14 @@ h2{
 }
 
 .swiper-container {
-    width: 76%;
+    width: 100%;
     height: 50%;
-    margin: 20px auto;
+
 }
 
 .swiper-slide{
-    width: 60%;
+    width: 40%;
+    text-align: center;
     /* Center slide text vertically */
     display: -webkit-box;
     display: -ms-flexbox;
@@ -191,10 +193,14 @@ h2{
 }
 
 .swiper-slide:nth-child(2n) {
-        width: 40%;
+        width: 40%;   
+    	opacity: 0.7;
+    	filter: alpha(opacity=70);
     }
 .swiper-slide:nth-child(3n) {
         width: 20%;
+        opacity: 0.4;
+    	filter: alpha(opacity=40);
     }
 
 .flip{
