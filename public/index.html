@@ -112,42 +112,9 @@
                 <h1>LUDO</h1>
                   <div class="swiper-container">
                     <div class="swiper-wrapper">
-                      <div class="swiper-slide">
-                        <div class="getCurrentTrack">
-                          <div class="trackTemplate">
-                              <img id="trackimg" width="350" height="350" />
-                              <figcaption id="songName"></figcaption>
-                              <figcaption id="artistName"></figcaption>
-                              <figcaption id="albumName"></figcaption>
-                              <img class="invert" id ="add" src="http://indianassist.mx/img/downArrow.png" height="20" width="20" />
-                          </div>
-                        </div>
-                      </div>
-                      <div class="swiper-slide">
-                        <div class="getCurrentTrack">
-                          <div class="trackTemplate">
-                              <img src="https://s-media-cache-ak0.pinimg.com/736x/24/28/10/242810087197ad884c0d895c2953a740.jpg" width="350" height="350" />
-                              <figcaption id="songName">songName</figcaption>
-                              <figcaption id="artistName">songName</figcaption>
-                              <figcaption id="albumName">songName</figcaption>
-                              <img class="invert" id ="add" src="http://indianassist.mx/img/downArrow.png" height="20" width="20" />
-                          </div>
-                        </div>
-                      </div>
-                      <div class="swiper-slide">
-                        <div class="getCurrentTrack">
-                          <div class="trackTemplate">
-                              <img src="https://s-media-cache-ak0.pinimg.com/736x/24/28/10/242810087197ad884c0d895c2953a740.jpg" width="350" height="350" />
-                              <figcaption id="songName">songName</figcaption>
-                              <figcaption id="artistName">songName</figcaption>
-                              <figcaption id="albumName">songName</figcaption>
-                              <img class="invert" id ="add" src="http://indianassist.mx/img/downArrow.png" height="20" width="20" />
-                          </div>
-                        </div>
-                      </div> 
                     </div>
-                    <div class="swiper-button-prev swiper-button-white"></div>
-                    <div class="swiper-button-next swiper-button-white"></div> 
+                    <img class="swiper-button-prev swiper-button-white" src="https://cdn0.iconfinder.com/data/icons/slim-square-icons-basics/100/basics-05-128.png" />
+                    <img class="swiper-button-next swiper-button-white" src="https://cdn0.iconfinder.com/data/icons/slim-square-icons-basics/100/basics-05-128.png" />
                   </div>    
             </div>
             <div class="right">
@@ -170,12 +137,14 @@
       var swiper = new Swiper('.swiper-container', {
         pagination: '.swiper-pagination',
         slidesPerView: 4,
+        keyboardControl: true,
         centeredSlides: true,
         paginationClickable: true,
         spaceBetween: 100,
         nextButton: '.swiper-button-next',
         prevButton: '.swiper-button-prev',
       });
+
     </script>
     <script>
     (function() {
@@ -257,22 +226,6 @@
 
 
 
-                function showPlayBackHistory(playbackArray) {
-                    var image = document.createElement('img');
-                    var song = document.createElement('figcaption');
-                    var artist = document.createElement('figcaption');
-                    var album1 = document.createElement('figcaption');
-
-                    image.src = playbackArray[1].imgURL;
-                    song.textContent = playbackArray[1].nameOfSong;
-                    artist.textContent = playbackArray[1].artistName;
-                    album1 = playbackArray[1].nameOfAlbum;
-
-                    var template = document.getElementById('trackTemplate');
-                    template.appendChild(image, song, artist, album1);
-                    console.log(template + "TEMPLATE");
-
-                }
 
                 displayUserInfo();
                 getCurrentSong();
@@ -296,6 +249,7 @@
                             songLength = response.timestamp;
                             songURL = response.item.external_urls;
                             isPlaying = response.is_playing;
+                            trackID = response.item.id;
 
 
                             var user = returnUser();
@@ -309,12 +263,23 @@
                                 songProgress: progress,
                                 songLength: songLength,
                                 songURL: songURL,
-                                isPlaying: isPlaying
+                                isPlaying: isPlaying,
+                                trackID: trackID
                             };
 
 
                             if (playbackArray.length == 0) {
                                 playbackArray[i] = jsonPushData;
+                                $('.swiper-wrapper').prepend($('<div/>', {class: 'swiper-slide'}).append(
+                                  $('<div/>', {class: 'getCurrentTrack'}).append(
+                                    $('<div/>', {class: 'trackTemplate'}).append(
+                                      $('<img/>', {src: jsonPushData.albumArt, width: 350, height: 350}),
+                                      $('<figcaption/>', {class: 'songName', text: playbackArray[0].songName}),
+                                      $('<figcaption/>', {class: 'artistName', text: playbackArray[0].artistName}),
+                                      $('<figcaption/>', {class: 'albumName', text: playbackArray[0].albumName}),
+                                      $('<img/>', {class: 'invert position', src: 'http://indianassist.mx/img/downArrow.png', alt: playbackArray[0].trackID, width: 20, height: 20})))));
+
+                                swiper.updateSlidesSize();
 
                                 if (user) {
                                     $.ajax({
@@ -341,43 +306,16 @@
                                 playbackArray.splice(startIndex, numElemtoRemove, jsonPushData);
                                 i = i + 1;
 
-                                var swiperSlide = document.createElement('div');
-                                swiperSlide.className = 'swiper-slide';
-                                
-                                var getCurrentTrack = document.createElement('div');
-                                getCurrentTrack.className = 'getCurrentTrack';
-                                
-                                var trackTemplate = document.createElement('div');
-                                trackTemplate.className = 'trackTemplate';
+                                $('.swiper-wrapper').prepend($('<div/>', {class: 'swiper-slide'}).append(
+                                  $('<div/>', {class: 'getCurrentTrack'}).append(
+                                    $('<div/>', {class: 'trackTemplate'}).append(
+                                      $('<img/>', {src: jsonPushData.albumArt, width: 350, height: 350}),
+                                      $('<figcaption/>', {class: 'songName', text: playbackArray[0].songName}),
+                                      $('<figcaption/>', {class: 'artistName', text: playbackArray[0].artistName}),
+                                      $('<figcaption/>', {class: 'albumName', text: playbackArray[0].albumName}),
+                                      $('<img/>', {class: 'invert position', src: 'http://indianassist.mx/img/downArrow.png', width: 20, height: 20})))));
 
-                                var image = document.createElement('img');
-                                image.src = jsonPushData.songURL;
-                                image.height = 400;
-                                image.width =400;
-
-                                var song = document.createElement('figcaption');
-                                song.text = jsonPushData.songName;
-
-                                var artist = document.createElement('figcaption');
-                                artist.text = jsonPushData.artistName;
-
-                                var album = document.createElement('figcaption');
-                                album.text = jsonPushData.albumName;
-
-                                var add = document.createElement('img');
-                                add.src = document.getElementById('add').src;
-
-                                trackTemplate.appendChild(image);
-                                trackTemplate.appendChild(song);
-                                trackTemplate.appendChild(artist);
-                                trackTemplate.appendChild(album);
-                                trackTemplate.appendChild(add);
-
-                                getCurrentTrack.appendChild(trackTemplate);
-                                swiperSlide.appendChild(getCurrentTrack);
-
-                                $('swiper-wrapper').prepend(swiperSlide);
-
+                                swiper.updateSlidesSize()
 
                                 if (user) {
                                     $.ajax({
@@ -392,19 +330,18 @@
                                 }
 
                                 getJSON();
-                                displayLive();
-                                console.log(playbackArray);
+                                console.log(playbackArray[0].songName);
                                 //console.log(playbackArray);
 
                             }
-
+/*
                             document.getElementById("trackimg").src = imgsrc;
                             document.getElementById("songName").innerHTML = songName;
                             document.getElementById("artistName").innerHTML = artistName;
                             document.getElementById("albumName").innerHTML = albumName;
                             //console.log(response);
 
-
+*/
 
                             $('#login').hide();
                             $('#loggedin').show();
@@ -472,6 +409,7 @@
                     });
                 });
 
+                /*
                 function displayLive(){
                   $.ajax({
                         url: '/showLive',
@@ -489,7 +427,12 @@
                     });
                 }
 
-                
+                */
+
+                document.getElementByClass('add').addEventListener('click', function)
+                {
+                  
+                }
 
                 document.getElementById('previous').addEventListener('click', function() {
                     refreshToken();
