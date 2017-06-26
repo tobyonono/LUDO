@@ -148,7 +148,8 @@
          * Obtains parameters from the hash of the URL
          * @return Object
          */
-        function getHashParams() {
+        function getHashParams() 
+        {
             var hashParams = {};
             var e, r = /([^&;=]+)=?([^&;]*)/g,
                 q = window.location.hash.substring(1);
@@ -165,35 +166,27 @@
             refresh_token = params.refresh_token,
             error = params.error;
 
-        function refreshToken() {
-            $.ajax({
-                url: '/refresh_token',
-                data: {
-                    'refresh_token': refresh_token
-                }
-            }).done(function(data) {
+        function refreshToken()
+        {
+          $.ajax({
+            url: '/refresh_token',
+            data: {
+              'refresh_token': refresh_token
+            }
+          }).done(function(data) {
                 access_token = data.access_token;
             });
         }
 
-        if (error) {
+        if (error)
+        {
             alert('There was an error during the authentication');
-        } else {
-            if (access_token) {
+        } 
+        else 
+        {
+            if (access_token) 
+            {
 
-                /*$.ajax({
-                    url: 'https://api.spotify.com/v1/me',
-                    headers: {
-                      'Authorization': 'Bearer ' + access_token
-                    },
-                    success: function(response) {
-                      userProfilePlaceholder.innerHTML = userProfileTemplate(response);
-
-                      $('#login').hide();
-                      $('#loggedin').show();
-                    }
-                });
-                */
                 var imgsrc;
                 var currentUserName;
                 var profiler;
@@ -221,14 +214,11 @@
                 };
 
 
-
-
                 displayUserInfo();
                 getCurrentSong();
 
 
                 function getCurrentSong() {
-
 
                     $.ajax({
                         url: 'https://api.spotify.com/v1/me/player/currently-playing',
@@ -237,107 +227,100 @@
                         },
                         success: function(response) {
 
-                            imgsrc = response.item.album.images[0].url;
-                            songName = response.item.name;
-                            artistName = response.item.artists[0].name;
-                            albumName = response.item.album.name;
-                            progress = response.progress_ms;
-                            songLength = response.timestamp;
-                            songURL = response.item.external_urls;
-                            isPlaying = response.is_playing;
-                            trackID = response.item.id;
+                          imgsrc = response.item.album.images[0].url;
+                          songName = response.item.name;
+                          artistName = response.item.artists[0].name;
+                          albumName = response.item.album.name;
+                          progress = response.progress_ms;
+                          songLength = response.timestamp;
+                          songURL = response.item.external_urls;
+                          isPlaying = response.is_playing;
+                          trackID = response.item.id;
+
+                          var user = returnUser();
+
+                          jsonPushData = {
+                            userName: user,
+                            albumArt: imgsrc,
+                            songName: songName,
+                            artistName: artistName,
+                            albumName: albumName,
+                            songProgress: progress,
+                            songLength: songLength,
+                            songURL: songURL,
+                            isPlaying: isPlaying,
+                            trackID: trackID
+                          };
 
 
-                            var user = returnUser();
-
-                            jsonPushData = {
-                                userName: user,
-                                albumArt: imgsrc,
-                                songName: songName,
-                                artistName: artistName,
-                                albumName: albumName,
-                                songProgress: progress,
-                                songLength: songLength,
-                                songURL: songURL,
-                                isPlaying: isPlaying,
-                                trackID: trackID
-                            };
-
-
-                            if (playbackArray.length == 0) {
-                                playbackArray[i] = jsonPushData;
-                                $('.swiper-wrapper').prepend($('<div/>', {class: 'swiper-slide'}).append(
-                                  $('<div/>', {class: 'getCurrentTrack'}).append(
-                                    $('<div/>', {class: 'trackTemplate'}).append(
-                                      $('<img/>', {src: jsonPushData.albumArt, width: 350, height: 350}),
-                                      $('<figcaption/>', {class: 'songName', text: playbackArray[0].songName}),
-                                      $('<figcaption/>', {class: 'artistName', text: playbackArray[0].artistName}),
-                                      $('<figcaption/>', {class: 'albumName', text: playbackArray[0].albumName}),
-                                      $('<img/>', {class: 'invert position', src: 'http://indianassist.mx/img/downArrow.png', alt: playbackArray[0].trackID, width: 20, height: 20})))));
+                            if(playbackArray.length == 0) 
+                            {
+                              playbackArray[i] = jsonPushData;
+                              $('.swiper-wrapper').prepend($('<div/>', {class: 'swiper-slide'}).append(
+                                $('<div/>', {class: 'getCurrentTrack'}).append(
+                                  $('<div/>', {class: 'trackTemplate', id: playbackArray[0].trackID}).append(
+                                    $('<img/>', {src: jsonPushData.albumArt, width: 350, height: 350}),
+                                    $('<figcaption/>', {class: 'songName', text: playbackArray[0].songName}),
+                                    $('<figcaption/>', {class: 'artistName', text: playbackArray[0].artistName}),
+                                    $('<figcaption/>', {class: 'albumName', text: playbackArray[0].albumName}),
+                                    $('<img/>', {class: 'invert position', src: 'http://indianassist.mx/img/downArrow.png', alt: playbackArray[0].trackID, width: 23, height: 23})))));
 
                                 swiper.updateSlidesSize();
 
-                                if (user) {
-                                    $.ajax({
-                                        data: JSON.stringify(jsonPushData),
-                                        url: '/updateJSON',
-                                        method: "POST",
-                                        contentType: "application/json",
-                                        dataType: 'json',
-                                        success: function(response) {
-                                            //console.log(currentUserName);
-                                        }
-                                    });
+                                if(user) 
+                                {
+                                  $.ajax({
+                                    data: JSON.stringify(jsonPushData),
+                                    url: '/updateJSON',
+                                    method: "POST",
+                                    contentType: "application/json",
+                                    dataType: 'json',
+                                    success: function(response) {
+                                        //console.log(currentUserName);
+                                    }
+                                  });
                                 }
-
                                 i = i + 1;
-
                                 console.log(playbackArray);
-
                                 getJSON();
-                            } else if ((playbackArray[0].songName != songName)) {
+                            } 
+                            else if ((playbackArray[0].songName != songName)) 
+                            {
+                              var startIndex = 0;
+                              var numElemtoRemove = 0;
+                              playbackArray.splice(startIndex, numElemtoRemove, jsonPushData);
+                              i = i + 1;
 
-                                var startIndex = 0;
-                                var numElemtoRemove = 0;
-                                playbackArray.splice(startIndex, numElemtoRemove, jsonPushData);
-                                i = i + 1;
+                              $('.swiper-wrapper').prepend($('<div/>', {class: 'swiper-slide'}).append(
+                                $('<div/>', {class: 'getCurrentTrack'}).append(
+                                  $('<div/>', {class: 'trackTemplate', id: playbackArray[0].trackID}).append(
+                                    $('<img/>', {src: jsonPushData.albumArt, width: 350, height: 350}),
+                                    $('<figcaption/>', {class: 'songName', text: playbackArray[0].songName}),
+                                    $('<figcaption/>', {class: 'artistName', text: playbackArray[0].artistName}),
+                                    $('<figcaption/>', {class: 'albumName', text: playbackArray[0].albumName}),
+                                    $('<img/>', {class: 'invert position', src: 'http://indianassist.mx/img/downArrow.png', width: 23, height: 23})))));
 
-                                $('.swiper-wrapper').prepend($('<div/>', {class: 'swiper-slide'}).append(
-                                  $('<div/>', {class: 'getCurrentTrack'}).append(
-                                    $('<div/>', {class: 'trackTemplate'}).append(
-                                      $('<img/>', {src: jsonPushData.albumArt, width: 350, height: 350}),
-                                      $('<figcaption/>', {class: 'songName', text: playbackArray[0].songName}),
-                                      $('<figcaption/>', {class: 'artistName', text: playbackArray[0].artistName}),
-                                      $('<figcaption/>', {class: 'albumName', text: playbackArray[0].albumName}),
-                                      $('<img/>', {class: 'invert position', src: 'http://indianassist.mx/img/downArrow.png', width: 20, height: 20})))));
+                              console.log(playbackArray[0].trackID + "nsdvjkbsv");
 
-                                swiper.updateSlidesSize()
+                              swiper.updateSlidesSize()
 
-                                if (user) {
-                                    $.ajax({
-                                        data: JSON.stringify(jsonPushData),
-                                        url: '/updateJSON',
-                                        method: "POST",
-                                        contentType: "application/json",
-                                        dataType: 'json',
-                                        success: function(response) {
-                                        }
-                                    });
+                                if(user) 
+                                {
+                                  $.ajax({
+                                    data: JSON.stringify(jsonPushData),
+                                    url: '/updateJSON',
+                                    method: "POST",
+                                    contentType: "application/json",
+                                    dataType: 'json',
+                                    success: function(response) 
+                                    {
+                                    }
+                                  });
                                 }
-
                                 getJSON();
                                 console.log(playbackArray[0].songName);
                                 //console.log(playbackArray);
-
                             }
-/*
-                            document.getElementById("trackimg").src = imgsrc;
-                            document.getElementById("songName").innerHTML = songName;
-                            document.getElementById("artistName").innerHTML = artistName;
-                            document.getElementById("albumName").innerHTML = albumName;
-                            //console.log(response);
-
-*/
 
                             $('#login').hide();
                             $('#loggedin').show();
@@ -346,44 +329,49 @@
                     setTimeout(getCurrentSong, 20000);
                 }
 
-                function displayUserInfo() {
-                    refreshToken();
-                    $.ajax({
-                        url: 'https://api.spotify.com/v1/me',
-                        headers: {
-                            'Authorization': 'Bearer ' + access_token
-                        },
-                        success: function(response) {
-                            profiler = response.images[0].url;
-                            console.log(profiler);
-                            currentUserName = response.display_name;
-                            if (!currentUserName) {
-                                currentUserName = response.id;
-                            }
+                function displayUserInfo() 
+                {
+                  refreshToken();
+                  $.ajax({
+                    url: 'https://api.spotify.com/v1/me',
+                    headers: {
+                         'Authorization': 'Bearer ' + access_token
+                    },
+                    success: function(response) {
+                      profiler = response.images[0].url;
+                      console.log(profiler);
+                      currentUserName = response.display_name;
+                      if (!currentUserName) 
+                      {
+                        currentUserName = response.id;
+                      }
                             
-                        }
-                    });
+                    }
+                  });
                 }
 
-                function getJSON() {
-                    $.ajax({
-                        url: '/getJSON',
-                        dataType: 'json',
-                        success: function(response) {
-                            console.log(response);
-                        }
-                    });
+                function getJSON() 
+                {
+                  $.ajax({
+                    url: '/getJSON',
+                    dataType: 'json',
+                    success: function(response) {
+                      console.log(response);
+                    }
+                  });
                 }
 
 
                 function returnUser() {
-                    return currentUserName;
+                  return currentUserName;
                 }
 
                 function returnProfiler() {
-                    return profiler;
+                  return profiler;
                 }
-                document.getElementById('toggle').addEventListener('click', function() {
+
+                document.getElementById('toggle').addEventListener('click', function() 
+                {
                     var user = returnUser();
                     var profiler = returnProfiler();
     
@@ -407,6 +395,7 @@
                 });
 
                 displayLive()
+
                 function displayLive()
                 {
                   var previous = null;
@@ -449,32 +438,58 @@
                   }, 2000);   
                 }
 
-                
+                $(document).on("click",".profTemp", function(){ 
+                  var selectedUser;
+                  $(this).toggleClass('selected');
+                  selectedUser = $(this).children('span').text(); 
+                  console.log(selectedUser);
+                }); 
 
-                
+                $(document).on("click",".position", function(){ 
+                  var selectedSong;
+                  $(this).toggleClass('selected');
+                  selectedSong = $(this).parent('div').attr('id'); 
 
-                document.getElementById('previous').addEventListener('click', function() {
-                    refreshToken();
-                    $.ajax({
-                        url: 'https://api.spotify.com/v1/me/player/previous',
-                        type: 'POST',
-                        headers: {
-                            'Authorization': 'Bearer ' + access_token
-                        },
-                        success: function() {
-                            console.log("it skipped");
-                        }
-                    });
+                   $.ajax({
+                    url: 'https://api.spotify.com/v1/me/tracks',
+                    ids: selectedSong,
+                    headers: {
+                      'Authorization': 'Bearer ' + access_token
+                    },
+                    type: 'PUT',
+                    contentType: 'application/json',
+                    success: function(){
+                      console.log("it saved ");
+                    }
+                   });
+                  console.log(selectedSong);
+                }); 
+                
+                document.getElementById('previous').addEventListener('click', function() 
+                {
+                  refreshToken();
+                  $.ajax({
+                    url: 'https://api.spotify.com/v1/me/player/previous',
+                    headers: {
+                         'Authorization': 'Bearer ' + access_token
+                    },
+                    type: 'PUT',
+                    contentType: 'application/json',
+                    success: function() {
+                      console.log("it skipped");
+                    }
+                  });
                 });
 
-                document.getElementById('fast-forward').addEventListener('click', function() {
-                    $.ajax({
-                        url: '/test',
-                        type: 'GET',
-                        success: function() {
-                            console.log("IT SHOULD HAVE DONE SOMETHING");
-                        }
-                    });
+                document.getElementById('fast-forward').addEventListener('click', function() 
+                {
+                  $.ajax({
+                    url: '/test',
+                    type: 'GET',
+                    success: function() {
+                      console.log("IT SHOULD HAVE DONE SOMETHING");
+                    }
+                  });
                 });
 
                 //}
