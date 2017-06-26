@@ -7,6 +7,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var jsonfile = require('jsonfile');
 var http = require('http');
+var cheerio = require('cheerio');
 
 
 var client_id = '4b5c02f8015941729381891f20c6f2a1'; // Your client id
@@ -144,6 +145,7 @@ app.post('/updateJSON', function(req, res){
     }
   
   clientJSON = JSON.stringify(obj);
+  res.sendStatus(200)
 });
 
 app.get('/getJSON', function(req, res){
@@ -154,6 +156,15 @@ app.get('/getJSON', function(req, res){
 app.get('/showLive', function(req, res){
   res.setHeader('Content-Type', 'application/json');
   res.json(activeClients);
+});
+
+
+
+app.get('/checkActive', function(req, res){
+  var obj = JSON.parse(activeClients);
+  var currentUser = req.body.userNameData;
+  var live = req.body.active;
+  var inArray = false;
 });
 
 app.get('/refresh_token', function(req, res) {
@@ -201,11 +212,22 @@ app.post('/updateUserStatus', function(req, res){
       obj.active.push(req.body);
     }   
   }
-  else
+
+  else if(!live)
   {
     for(var i = 0; i < obj.active.length; i++)
     {
       if(obj.active[i].userNameData == currentUser)
+      {
+        obj.active[i] = req.body;
+      }
+    }
+  }
+  else
+  {
+    for(var i = 0; i < obj.active.length; i++)
+    {
+      if(!obj.active[i].userNameData)
       {
         obj.active.splice(i, 1);
       }
@@ -214,6 +236,7 @@ app.post('/updateUserStatus', function(req, res){
   
   activeClients = JSON.stringify(obj);
   console.log(activeClients);
+  res.sendStatus(200)
 });
 
 

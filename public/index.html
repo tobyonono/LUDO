@@ -28,10 +28,6 @@
                 <span>Frank Ocean</span>
               </div>
               <div class="profTemp">
-                <img id="profiler" width="40" height="40" />
-                <span>Toby Onono</span>
-              </div>
-              <div class="profTemp">
                 <img src="http://saintheron.com/wp-content/uploads/2017/06/Jorja.Smith_-500x500.jpg" width="40" height="40" />
                 <span>Jorja Smith</span>
               </div>
@@ -359,11 +355,12 @@
                         },
                         success: function(response) {
                             profiler = response.images[0].url;
+                            console.log(profiler);
                             currentUserName = response.display_name;
                             if (!currentUserName) {
                                 currentUserName = response.id;
                             }
-                            document.getElementById("profiler").src = profiler;
+                            
                         }
                     });
                 }
@@ -402,37 +399,59 @@
                         url: '/updateUserStatus',
                         method: 'POST',
                         contentType: 'application/json',
-                        dataType: 'json',
+                        dataType: 'html',
                         success: function(response) {
               
                         }
                     });
                 });
 
-                /*
-                function displayLive(){
-                  $.ajax({
-                        url: '/showLive',
-                        dataType: 'json',
-                        contentType: 'application/json',
-                        success: function(response) {
-                            var test = JSON.parse(response);
-                            console.log(test.active[0]);
-
-                            $('.left').prepend($('<div/>', {class: 'profTemp'}).append(
-                              $('<img/>', {src: test.active[0].profiler, width: 40, height: 40}),
-                              $('<span/>', {text: " " + test.active[0].userNameData})));
-
-                        }
-                    });
-                }
-
-                */
-
-                document.getElementByClass('add').addEventListener('click', function)
+                displayLive()
+                function displayLive()
                 {
-                  
+                  var previous = null;
+                  var current = null;
+                  setInterval(function()
+                  {
+                    $.ajax({
+                      url: '/showLive',
+                      dataType: 'json',
+                      contentType: 'application/json',
+                      success: function(response) 
+                      {
+                        current = JSON.stringify(response);
+                        if(previous !== current)
+                        {
+                          var obj = JSON.parse(response);
+                          console.log(obj);
+                          for(var i = 0; i < obj.active.length; i++)
+                          {
+                            if($(document.getElementById(obj.active[i].userNameData)).length == 0)
+                            {
+                              if(obj.active[i].active === true)
+                              {
+                                $('.left').prepend($('<div/>', {class: 'profTemp', id: obj.active[i].userNameData}).append(
+                                  $('<img/>', {src: obj.active[i].profiler, width: 40, height: 40}),
+                                  $('<span/>', {text: " " + obj.active[i].userNameData}))); 
+                              }  
+                              
+                            }
+                            else if(obj.active[i].active === false)
+                            {
+                              $(document.getElementById(obj.active[i].userNameData)).remove();
+                              console.log("getting in false");
+                            }
+                          }
+                        }
+                      }
+                    }); 
+                    previous = current; 
+                  }, 2000);   
                 }
+
+                
+
+                
 
                 document.getElementById('previous').addEventListener('click', function() {
                     refreshToken();

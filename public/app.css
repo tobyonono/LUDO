@@ -129,17 +129,17 @@ h2{
 
 
 .getCurrentTrack{
-	font-family: "Montserrat";
+	font-family: 'Cousine', monospace;
 	font-weight: bold;
-	text-transform: uppercase;
-	font-size: 9px;
+	text-transform: lowercase;
+	font-size: 9.5px;
 	text-align: center;
 	padding-top: 7%;
 
 }
 
 .trackTemplate{
-	font-family: "Montserrat";
+	font-family: 'Cousine', monospace;
 	text-align: left;
 	display: inline-block;
 	max-width: 400px;
