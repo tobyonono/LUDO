@@ -268,7 +268,7 @@
                           progress = response.progress_ms;
                           songLength = response.timestamp;
                           isPlaying = response.is_playing;
-                          uri = response.item.album.uri;
+                          uri = response.item.uri;
                           deviceID = response.device.id
 
                           var user = returnUser();
@@ -279,7 +279,6 @@
                             songName: songName,
                             artistName: artistName,
                             albumName: albumName,
-                            songProgress: progress,
                             songLength: songLength,
                             songURL: songURL,
                             isPlaying: isPlaying,
@@ -361,7 +360,7 @@
                             $('#loggedin').show();
                         }
                     });
-                    setTimeout(getCurrentSong, 20000);
+                    setTimeout(getCurrentSong, 2000);
                 }
 
                 function displayUserInfo() 
@@ -481,53 +480,77 @@
                   var selectedUser;
                   var previous = null;
                   var current = null;
-          
+                  var assigned = false;
+
                   selectedUser = $(this).children('span').text();
+                  selectedUser = selectedUser.trim();
+
+                  this.data = selectedUser
+                  var self = this;
+          
+                  //selectedUser = $(this).children('span').text();
+                  console.log(selectedUser);
                   $(this).toggleClass('selected');
 
-                  selectedUser = selectedUser.trim();
+                  //selectedUser = selectedUser.trim();
 
                   setInterval(function()
                   {
+                    
+                    console.log(selectedUser);
                     $.ajax({
                       url: '/getJSON',
                       dataType: 'json',
                       success: function(response) {
                         console.log(response + "84897348");
                         obj = JSON.parse(response);
-                        //console.log(selectedUser);
+                        console.log(selectedUser + "inside success");
 
+                        var changeTo;
+                        var deviceID;
+                        
+                        console.log(current + "current");
                           for(var i = 0; i < obj.clients.length; i++)
                           {
-                            if(selectedUser == obj.clients[i].userName)
+                            if((self.data == obj.clients[i].userName) && (assigned == false))
                             {
+                              console.log(selectedUser + " inside if");
                               current = JSON.stringify(obj.clients[i]);
-                              if(previous !== current)
-                              { 
-                                  var changeTo = obj.clients[i].uri;
-                                  var device = obj.clients[i].deviceID;
-
-                                  $.ajax({
-                                    url: 'https://api.spotify.com/v1/me/player/play',
-                                    contentType: 'application/json',
-                                    type: 'PUT',
-                                    dataType: 'json',
-                                    headers: {
-                                      'Authorization': 'Bearer ' + access_token
-                                    },
-                                    data: JSON.stringify({"context_uri":changeTo, "device_id":device, "offset": { "position":5} }),
-                                    success: function(response) {
-                                      console.log(response);
-                                    }
-                                  });
-                              }
+                              changeTo = obj.clients[i].uri;
+                              device = obj.clients[i].deviceID
+                              assigned = true;
                             }
+                          }
+                          assigned = false;
+
+                          console.log(current + " current");
+                          console.log(previous + "previous");
+                              
+                          if(previous !== current)
+                          {          
+
+                            console.log("ARE WE INSIDE HERE");
+
+                            $.ajax({
+                              url: 'https://api.spotify.com/v1/me/player/play',
+                              contentType: 'application/json',
+                              type: 'PUT',
+                              dataType: 'json',
+                              headers: {
+                                'Authorization': 'Bearer ' + access_token
+                              },
+                              data: JSON.stringify({"uris":[changeTo], "device_id":device, "offset": { "uri":changeTo} }),
+                              success: function(response) {
+                                console.log(response);
+                              }
+                            });
                           }
                         }
                       });
-
                     previous = current;
+                    console.log(selectedUser);
                   }, 2000);
+                  
                 }); 
 
                 $(document).on("click",".position", function(){ 
