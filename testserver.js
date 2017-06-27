@@ -55,7 +55,7 @@ app.get('/login', function(req, res) {
   res.cookie(stateKey, state);
 
   // your application requests authorization
-  var scope = 'user-read-private user-read-email user-read-currently-playing user-library-modify';
+  var scope = 'user-read-private user-read-email user-read-currently-playing user-read-playback-state user-library-modify ';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
@@ -131,9 +131,17 @@ app.post('/updateJSON', function(req, res){
 
   var obj = JSON.parse(clientJSON);
   var exists = false;
-  for(var i = 0; i < obj.clients.length; i++)
+  user = req.body.userName;
+
+  if(obj.clients.length === 0)
+  {
+    obj.clients.push(req.body);
+  }
+  else if(obj.clients.length > 0)
+  {
+    for(var i = 0; i < obj.clients.length; i++)
     {
-      if(obj.clients[i].username == req.body.username)
+      if(obj.clients[i].userName == user)
       {
         obj.clients[i] = req.body;
         exists = true;
@@ -143,7 +151,7 @@ app.post('/updateJSON', function(req, res){
     if(exists == false){
       obj.clients.push(req.body);
     }
-  
+  }
   clientJSON = JSON.stringify(obj);
   res.sendStatus(200)
 });

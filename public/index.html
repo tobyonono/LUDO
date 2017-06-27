@@ -103,6 +103,38 @@
                 <img src="http://hbr.co.ke/wp-content/uploads/2017/06/SZA-blue-box.jpg" width="40" height="40" />
                 <span>SZA</span>
               </div>
+              <div class="profTemp">
+                <img src="https://s3.amazonaws.com/beatstarsdata/b.user.data/w/westweekend-152110/gfx/cover-artwork/238117_med_.jpg" width="40" height="40" />
+                <span>Tyler</span>
+              </div>
+              <div class="profTemp">
+                <img src="https://dontfckabout.files.wordpress.com/2016/10/yeah-yeah.jpg?w=730" width="40" height="40" />
+                <span>Jesse James Solomon</span>
+              </div>
+              <div class="profTemp">
+                <img src="https://i1.sndcdn.com/artworks-000166667136-5heltz-t500x500.jpg" width="40" height="40" />
+                <span>Snoochie Shy</span>
+              </div>
+              <div class="profTemp">
+                <img src="https://thumbnailer.mixcloud.com/unsafe/300x300/extaudio/5/3/e/9/0648-ec8e-4d76-923e-1b837ea94eb2.jpg" width="40" height="40" />
+                <span>Sofie Fatouretchi</span>
+              </div>
+              <div class="profTemp">
+                <img src="http://images.sk-static.com/images/media/profile_images/artists/591219/huge_avatar" width="40" height="40" />
+                <span>James Blake</span>
+              </div>
+              <div class="profTemp">
+                <img src="https://68.media.tumblr.com/9bd38039b2ed72c3f8f79b5841c0248c/tumblr_oion4yG1a21rb7lvjo1_500.jpg" width="40" height="40" />
+                <span>Steve Lacy</span>
+              </div>
+              <div class="profTemp">
+                <img src="https://68.media.tumblr.com/f281802a37d7ada6b610ad31a862543e/tumblr_nstvm65CZ81r2mlhzo1_500.png" width="40" height="40" />
+                <span>Lisa Bonet</span>
+              </div>
+              <div class="profTemp">
+                <img src="http://saintheron.com/wp-content/uploads/2017/06/avatars-000207874594-xv7qts-t500x500.jpg" width="40" height="40" />
+                <span>Daniel Caesar</span>
+              </div>
             </div>
             <div class="center">
                 <h1>LUDO</h1>
@@ -197,6 +229,8 @@
                 var songLength;
                 var songURL;
                 var isPlaying;
+                var uri;
+                var deviceID;
                 var playbackArray = [];
                 var i = 0;
 
@@ -221,7 +255,7 @@
                 function getCurrentSong() {
 
                     $.ajax({
-                        url: 'https://api.spotify.com/v1/me/player/currently-playing',
+                        url: 'https://api.spotify.com/v1/me/player',
                         headers: {
                             'Authorization': 'Bearer ' + access_token
                         },
@@ -233,9 +267,9 @@
                           albumName = response.item.album.name;
                           progress = response.progress_ms;
                           songLength = response.timestamp;
-                          songURL = response.item.external_urls;
                           isPlaying = response.is_playing;
-                          trackID = response.item.id;
+                          uri = response.item.album.uri;
+                          deviceID = response.device.id
 
                           var user = returnUser();
 
@@ -249,16 +283,17 @@
                             songLength: songLength,
                             songURL: songURL,
                             isPlaying: isPlaying,
-                            trackID: trackID
+                            uri: uri,
+                            deviceID: deviceID
                           };
 
 
                             if(playbackArray.length == 0) 
                             {
                               playbackArray[i] = jsonPushData;
-                              $('.swiper-wrapper').prepend($('<div/>', {class: 'swiper-slide'}).append(
+                              $('.swiper-wrapper').prepend($('<div/>', {class: 'swiper-slide swiper-slide-active'}).append(
                                 $('<div/>', {class: 'getCurrentTrack'}).append(
-                                  $('<div/>', {class: 'trackTemplate', id: playbackArray[0].trackID}).append(
+                                  $('<div/>', {class: 'trackTemplate', id: playbackArray[0].uri}).append(
                                     $('<img/>', {src: jsonPushData.albumArt, width: 350, height: 350}),
                                     $('<figcaption/>', {class: 'songName', text: playbackArray[0].songName}),
                                     $('<figcaption/>', {class: 'artistName', text: playbackArray[0].artistName}),
@@ -293,7 +328,7 @@
 
                               $('.swiper-wrapper').prepend($('<div/>', {class: 'swiper-slide'}).append(
                                 $('<div/>', {class: 'getCurrentTrack'}).append(
-                                  $('<div/>', {class: 'trackTemplate', id: playbackArray[0].trackID}).append(
+                                  $('<div/>', {class: 'trackTemplate', id: playbackArray[0].uri}).append(
                                     $('<img/>', {src: jsonPushData.albumArt, width: 350, height: 350}),
                                     $('<figcaption/>', {class: 'songName', text: playbackArray[0].songName}),
                                     $('<figcaption/>', {class: 'artistName', text: playbackArray[0].artistName}),
@@ -352,13 +387,16 @@
 
                 function getJSON() 
                 {
+                  var returnVal;
                   $.ajax({
                     url: '/getJSON',
                     dataType: 'json',
                     success: function(response) {
-                      console.log(response);
+                      returnVal = response;
                     }
                   });
+
+                 // return returnVal;
                 }
 
 
@@ -438,11 +476,58 @@
                   }, 2000);   
                 }
 
-                $(document).on("click",".profTemp", function(){ 
+                $(document).on("click",".profTemp", function()
+                { 
                   var selectedUser;
+                  var previous = null;
+                  var current = null;
+          
+                  selectedUser = $(this).children('span').text();
                   $(this).toggleClass('selected');
-                  selectedUser = $(this).children('span').text(); 
-                  console.log(selectedUser);
+
+                  selectedUser = selectedUser.trim();
+
+                  setInterval(function()
+                  {
+                    $.ajax({
+                      url: '/getJSON',
+                      dataType: 'json',
+                      success: function(response) {
+                        console.log(response + "84897348");
+                        obj = JSON.parse(response);
+                        //console.log(selectedUser);
+
+                          for(var i = 0; i < obj.clients.length; i++)
+                          {
+                            if(selectedUser == obj.clients[i].userName)
+                            {
+                              current = JSON.stringify(obj.clients[i]);
+                              if(previous !== current)
+                              { 
+                                  var changeTo = obj.clients[i].uri;
+                                  var device = obj.clients[i].deviceID;
+
+                                  $.ajax({
+                                    url: 'https://api.spotify.com/v1/me/player/play',
+                                    contentType: 'application/json',
+                                    type: 'PUT',
+                                    dataType: 'json',
+                                    headers: {
+                                      'Authorization': 'Bearer ' + access_token
+                                    },
+                                    data: JSON.stringify({"context_uri":changeTo, "device_id":device, "offset": { "position":5} }),
+                                    success: function(response) {
+                                      console.log(response);
+                                    }
+                                  });
+                              }
+                            }
+                          }
+                        }
+                      });
+
+                    previous = current;
+                  }, 2000);
                 }); 
 
                 $(document).on("click",".position", function(){ 
