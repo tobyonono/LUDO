@@ -475,83 +475,100 @@
                   }, 2000);   
                 }
 
+                var pollUser;
+
                 $(document).on("click",".profTemp", function()
                 { 
-                  var selectedUser;
-                  var previous = null;
-                  var current = null;
-                  var assigned = false;
-
-                  selectedUser = $(this).children('span').text();
-                  selectedUser = selectedUser.trim();
-
-                  this.data = selectedUser
-                  var self = this;
-          
-                  //selectedUser = $(this).children('span').text();
-                  console.log(selectedUser);
-                  $(this).toggleClass('selected');
-
-                  //selectedUser = selectedUser.trim();
-
-                  setInterval(function()
+                  
+                  if(!$(this).hasClass('selected'))
                   {
-                    
-                    console.log(selectedUser);
-                    $.ajax({
-                      url: '/getJSON',
-                      dataType: 'json',
-                      success: function(response) {
-                        console.log(response + "84897348");
-                        obj = JSON.parse(response);
-                        console.log(selectedUser + "inside success");
+                    var selectedUser;
+                    var previous = null;
+                    var current = null;
+                    var assigned = false;
 
-                        var changeTo;
-                        var deviceID;
-                        
-                        console.log(current + "current");
-                          for(var i = 0; i < obj.clients.length; i++)
-                          {
-                            if((self.data == obj.clients[i].userName) && (assigned == false))
+                    selectedUser = $(this).children('span').text();
+                    selectedUser = selectedUser.trim();
+
+                    
+            
+                    //selectedUser = $(this).children('span').text();
+                    console.log(selectedUser);
+                    $(this).toggleClass('selected');
+
+                    //selectedUser = selectedUser.trim();
+
+                    pollUser = setInterval(function()
+                    {
+                      
+                      console.log(selectedUser);
+                      $.ajax({
+                        url: '/getJSON',
+                        dataType: 'json',
+                        success: function(response) {
+                          console.log(response + "84897348");
+                          obj = JSON.parse(response);
+                          console.log(selectedUser + "inside success");
+
+                          var changeTo;
+                          var deviceID;
+                          
+                          console.log(current + "current");
+                            for(var i = 0; i < obj.clients.length; i++)
                             {
-                              console.log(selectedUser + " inside if");
-                              current = JSON.stringify(obj.clients[i]);
-                              changeTo = obj.clients[i].uri;
-                              device = obj.clients[i].deviceID
-                              assigned = true;
+                              if((selectedUser == obj.clients[i].userName) && (assigned == false))
+                              {
+                                console.log(selectedUser + " inside if");
+                                current = JSON.stringify(obj.clients[i]);
+                                changeTo = obj.clients[i].uri;
+                                device = obj.clients[i].deviceID
+                                assigned = true;
+                              }
+                            }
+                            assigned = false;
+
+                            console.log(current + " current");
+                            console.log(previous + "previous");
+                                
+                            if(previous !== current)
+                            {          
+
+                              console.log("ARE WE INSIDE HERE");
+
+                              $.ajax({
+                                url: 'https://api.spotify.com/v1/me/player/play',
+                                contentType: 'application/json',
+                                type: 'PUT',
+                                dataType: 'json',
+                                headers: {
+                                  'Authorization': 'Bearer ' + access_token
+                                },
+                                data: JSON.stringify({"uris":[changeTo], "device_id":device, "offset": { "uri":changeTo} }),
+                                success: function(response) {
+                                  console.log(response);
+                                }
+                              });
                             }
                           }
-                          assigned = false;
+                        });
+                      previous = current;
+                      console.log(selectedUser);
+                    }, 2000);
+                  }
 
-                          console.log(current + " current");
-                          console.log(previous + "previous");
-                              
-                          if(previous !== current)
-                          {          
-
-                            console.log("ARE WE INSIDE HERE");
-
-                            $.ajax({
-                              url: 'https://api.spotify.com/v1/me/player/play',
-                              contentType: 'application/json',
-                              type: 'PUT',
-                              dataType: 'json',
-                              headers: {
-                                'Authorization': 'Bearer ' + access_token
-                              },
-                              data: JSON.stringify({"uris":[changeTo], "device_id":device, "offset": { "uri":changeTo} }),
-                              success: function(response) {
-                                console.log(response);
-                              }
-                            });
-                          }
-                        }
-                      });
-                    previous = current;
-                    console.log(selectedUser);
-                  }, 2000);
+                  else if($(this).hasClass('selected'))
+                  {
+                    $(this).toggleClass('selected');
+                    console.log("not selected");
+                    clearInterval(pollUser);
+                  }       
                   
                 }); 
+
+                $("selected").on("click", function(event)
+                {
+                    event.stopPropagation();
+                });
 
                 $(document).on("click",".position", function(){ 
                   var selectedSong;

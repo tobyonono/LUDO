@@ -96,7 +96,13 @@ body{
 	margin-right: 10px;
 	vertical-align: middle;
 }
+.notSelected{
+	color: black;
+}
 
+.notSelected img{
+	border: none;
+}
 
 .selected{
 	color: #b32200;
