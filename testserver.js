@@ -167,14 +167,6 @@ app.get('/showLive', function(req, res){
 });
 
 
-
-app.get('/checkActive', function(req, res){
-  var obj = JSON.parse(activeClients);
-  var currentUser = req.body.userNameData;
-  var live = req.body.active;
-  var inArray = false;
-});
-
 app.get('/refresh_token', function(req, res) {
 
   // requesting access token from refresh token

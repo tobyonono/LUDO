@@ -286,6 +286,8 @@
                             deviceID: deviceID
                           };
 
+                          
+
 
                             if(playbackArray.length == 0) 
                             {
@@ -303,21 +305,22 @@
 
                                 if(user) 
                                 {
-                                  $.ajax({
-                                    data: JSON.stringify(jsonPushData),
-                                    url: '/updateJSON',
-                                    method: "POST",
-                                    contentType: "application/json",
-                                    dataType: 'json',
-                                    success: function(response) {
-                                        //console.log(currentUserName);
-                                    }
-                                  });
+                                  updateJSON(jsonPushData);
                                 }
                                 i = i + 1;
                                 console.log(playbackArray);
                                 getJSON();
                             } 
+
+                            else if((playbackArray[0].isPlaying != isPlaying) && (playbackArray[0].songName == songName))
+                            {
+                              playbackArray[0] = jsonPushData;
+                              if(user)
+                              {
+                                updateJSON(jsonPushData);
+                              }                                 
+                            }
+
                             else if ((playbackArray[0].songName != songName)) 
                             {
                               var startIndex = 0;
@@ -340,16 +343,7 @@
 
                                 if(user) 
                                 {
-                                  $.ajax({
-                                    data: JSON.stringify(jsonPushData),
-                                    url: '/updateJSON',
-                                    method: "POST",
-                                    contentType: "application/json",
-                                    dataType: 'json',
-                                    success: function(response) 
-                                    {
-                                    }
-                                  });
+                                  updateJSON(jsonPushData);
                                 }
                                 getJSON();
                                 console.log(playbackArray[0].songName);
@@ -360,7 +354,7 @@
                             $('#loggedin').show();
                         }
                     });
-                    setTimeout(getCurrentSong, 2000);
+                    setTimeout(getCurrentSong, 5000);
                 }
 
                 function displayUserInfo() 
@@ -373,7 +367,6 @@
                     },
                     success: function(response) {
                       profiler = response.images[0].url;
-                      console.log(profiler);
                       currentUserName = response.display_name;
                       if (!currentUserName) 
                       {
@@ -396,6 +389,21 @@
                   });
 
                  // return returnVal;
+                }
+
+                function updateJSON(jsonData)
+                {
+                  $.ajax({
+                    data: JSON.stringify(jsonData),
+                    url: '/updateJSON',
+                    method: "POST",
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: function(response) 
+                    {
+                      console.log(response + " inside get Current Song");
+                    }
+                  });
                 }
 
 
@@ -479,6 +487,9 @@
 
                 $(document).on("click",".profTemp", function()
                 { 
+
+                  
+                
                   
                   if(!$(this).hasClass('selected'))
                   {
@@ -490,6 +501,9 @@
                     selectedUser = $(this).children('span').text();
                     selectedUser = selectedUser.trim();
 
+                    $('.profTemp').removeClass('selected');
+                    clearInterval(pollUser);
+
                     
             
                     //selectedUser = $(this).children('span').text();
@@ -500,60 +514,77 @@
 
                     pollUser = setInterval(function()
                     {
-                      
                       console.log(selectedUser);
                       $.ajax({
                         url: '/getJSON',
                         dataType: 'json',
                         success: function(response) {
-                          console.log(response + "84897348");
+                          console.log(response + "inside set interval!!");
                           obj = JSON.parse(response);
-                          console.log(selectedUser + "inside success");
+        
 
                           var changeTo;
                           var deviceID;
+                          var playing;
                           
-                          console.log(current + "current");
                             for(var i = 0; i < obj.clients.length; i++)
                             {
-                              if((selectedUser == obj.clients[i].userName) && (assigned == false))
+                              if(selectedUser == obj.clients[i].userName) 
                               {
                                 console.log(selectedUser + " inside if");
                                 current = JSON.stringify(obj.clients[i]);
                                 changeTo = obj.clients[i].uri;
                                 device = obj.clients[i].deviceID
-                                assigned = true;
+                                playing = obj.clients[i].isPlaying;
+                          
                               }
                             }
-                            assigned = false;
 
-                            console.log(current + " current");
-                            console.log(previous + "previous");
-                                
-                            if(previous !== current)
-                            {          
+                           
+                            console.log(playing);
 
-                              console.log("ARE WE INSIDE HERE");
-
+                            if(playing == false)
+                            {
                               $.ajax({
-                                url: 'https://api.spotify.com/v1/me/player/play',
-                                contentType: 'application/json',
-                                type: 'PUT',
-                                dataType: 'json',
-                                headers: {
-                                  'Authorization': 'Bearer ' + access_token
-                                },
-                                data: JSON.stringify({"uris":[changeTo], "device_id":device, "offset": { "uri":changeTo} }),
-                                success: function(response) {
-                                  console.log(response);
-                                }
-                              });
+                              url: 'https://api.spotify.com/v1/me/player/pause',
+                              contentType: 'application/json',
+                              type: 'PUT',
+                              dataType: 'json',
+                              headers: {
+                                'Authorization': 'Bearer ' + access_token
+                              },
+                              data: JSON.stringify({"device_id":device}),
+                              success: function(response) {    
+                              }
+                            });
+
                             }
+
+                            
+                            
+                            if(playing == true)
+                            {
+                              if(previous !== current)
+                              {          
+                                $.ajax({
+                                  url: 'https://api.spotify.com/v1/me/player/play',
+                                  contentType: 'application/json',
+                                  type: 'PUT',
+                                  dataType: 'json',
+                                  headers: {
+                                    'Authorization': 'Bearer ' + access_token
+                                  },
+                                  data: JSON.stringify({"uris":[changeTo], "device_id":device, "offset": { "uri":changeTo} }),
+                                  success: function(response) {
+                                  }
+                                });
+                              }   
+                            }                   
                           }
                         });
                       previous = current;
                       console.log(selectedUser);
-                    }, 2000);
+                    }, 5000);
                   }
 
                   else if($(this).hasClass('selected'))
@@ -565,6 +596,8 @@
                   
                 }); 
 
+                
+
                 $("selected").on("click", function(event)
                 {
                     event.stopPropagation();
@@ -572,21 +605,21 @@
 
                 $(document).on("click",".position", function(){ 
                   var selectedSong;
-                  $(this).toggleClass('selected');
+                  //$(this).toggleClass('selected');
                   selectedSong = $(this).parent('div').attr('id'); 
 
                    $.ajax({
-                    url: 'https://api.spotify.com/v1/me/tracks',
-                    ids: selectedSong,
-                    headers: {
-                      'Authorization': 'Bearer ' + access_token
-                    },
-                    type: 'PUT',
-                    contentType: 'application/json',
-                    success: function(){
-                      console.log("it saved ");
-                    }
-                   });
+                      url: 'https://api.spotify.com/v1/me/tracks',
+                      contentType: 'application/json',
+                      type: 'PUT',
+                      dataType: 'json',
+                      headers: {
+                        'Authorization': 'Bearer ' + access_token
+                      },
+                      data: JSON.stringify({"uris":[changeTo], "device_id":device, "offset": { "uri":changeTo} }),
+                      success: function(response) {
+                      }
+                    });
                   console.log(selectedSong);
                 }); 
                 
