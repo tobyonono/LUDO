@@ -58,6 +58,7 @@ body{
 .center{
 	grid-column: 2;
 	background: black;
+	overflow: auto;
 }
 
 .right{
@@ -106,12 +107,24 @@ body{
 
 .selected{
 	color: #b32200;
-	content: ".tyjytj";
+	content: "";
 }
 
 .selected img{
 	border: 1px solid #b32200;
   	 	
+}
+
+.lyrics{
+	color: white;
+	text-align: center;
+	font-family:'Cousine', monospace;
+	font-size: 9.5px;
+}
+
+.lyricsSet{
+	width: 30%;
+	text-align: center;
 }
 
 
@@ -184,7 +197,7 @@ h2{
 }
 
 .albumName{
-	color: #1C1A1D;
+	color: rgba(44,63,82,1);
 }
 
 #add{
@@ -289,12 +302,21 @@ h2{
     transform: scale(-1, -1);
 }
 
+.rotate{
+	-moz-transform: scale(-1, -1);
+    -o-transform: scale(-1, -1);
+    -webkit-transform: scale(-1, -1);
+    transform: scale(-1, -1);
+}
+
 div .input{
 	margin-left: 20%;
 	margin-right: 20%;
 	padding-right: 10%;
 	padding-left: 10%;
 }
+
+
 
 .player{
 	padding-top: 5%;

@@ -143,17 +143,21 @@
                     </div>
                     <img class="swiper-button-prev swiper-button-white" src="https://cdn0.iconfinder.com/data/icons/slim-square-icons-basics/100/basics-05-128.png" />
                     <img class="swiper-button-next swiper-button-white" src="https://cdn0.iconfinder.com/data/icons/slim-square-icons-basics/100/basics-05-128.png" />
-                  </div>    
+                  </div> 
+                <div class="player">
+                  <input type="image" class="invert" id="previous" src="http://freeiconbox.com/icon/256/20648.png" width="25" height="25" />
+                  <input type="image" class="invert" name="play-pause" src="https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_play_arrow_48px-512.png"  width="25" height="25" />
+                  <input type="image" class="invert rotate" id="fast-forward" src="http://freeiconbox.com/icon/256/20648.png" class="flip" width="25" height="25" />
+                </div> 
+                <div class="lyrics">
+                </div>   
             </div>
-            <div class="right">
-              <div class="player">
-                    <input type="image" id="previous" src="http://freeiconbox.com/icon/256/20648.png" width="25" height="25" />
-                    <input type="image" name="play-pause" src="https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_play_arrow_48px-512.png"  width="25" height="25" />
-                    <input type="image" id="fast-forward" src="http://freeiconbox.com/icon/256/20648.png" class="flip" width="25" height="25" />
-                </div>
-               <input type="checkbox" id="toggle" />
-               <label for="toggle">Toggle</label>
+            <div class="right">  
+              <input type="checkbox" id="toggle" />
+              <label for="toggle">Toggle</label>
             </div>
+            
+            
         </div>
     </div>
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
@@ -161,6 +165,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.2/js/swiper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.2/js/swiper.jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.2/js/swiper.jquery.min.js"></script>
+    <script type="text/javascript" src="http://tracking.musixmatch.com/t1.0/AMa6hJCIEzn1v8RuOP"></script>
     <script>
       var swiper = new Swiper('.swiper-container', {
         pagination: '.swiper-pagination',
@@ -338,6 +343,7 @@
                                     $('<img/>', {class: 'invert position', src: 'http://indianassist.mx/img/downArrow.png', width: 23, height: 23})))));
 
                               console.log(playbackArray[0].trackID + "nsdvjkbsv");
+                              getLyrics(playbackArray);
 
                               swiper.updateSlidesSize()
 
@@ -355,6 +361,38 @@
                         }
                     });
                     setTimeout(getCurrentSong, 5000);
+                }
+
+                function getLyrics(array)
+                {
+                  var musixmatch = "f95b0e13b5e6b3336b48703201a8633e";
+                  var song = array[0].songName;
+                  var artist = array[0].artistName;
+                  var lyricsID;
+                  var songLyrics;
+
+                  $.ajax({
+                    type: "GET",
+                    data: {
+                      "apikey": musixmatch,
+                      "q_track": song,
+                      "q_artist": artist,
+                      "format": "jsonp",  
+                    },
+                    url: "https://api.musixmatch.com/ws/1.1/matcher.lyrics.get",
+                    dataType: "jsonp",
+                    contentType: 'application/json',
+                    success: function(response)
+                    {
+                      songLyrics = response.message.body.lyrics.lyrics_body;
+                      $('.center').append($('<div/>', {class: 'lyrics lyricsSet', text: songLyrics}));
+                      console.log(songLyrics);
+                    }
+                  });
+
+                  
+
+
                 }
 
                 function displayUserInfo() 
@@ -486,11 +524,8 @@
                 var pollUser;
 
                 $(document).on("click",".profTemp", function()
-                { 
-
-                  
-                
-                  
+                {    
+                    
                   if(!$(this).hasClass('selected'))
                   {
                     var selectedUser;
@@ -519,10 +554,7 @@
                         url: '/getJSON',
                         dataType: 'json',
                         success: function(response) {
-                          console.log(response + "inside set interval!!");
                           obj = JSON.parse(response);
-        
-
                           var changeTo;
                           var deviceID;
                           var playing;
@@ -540,28 +572,23 @@
                               }
                             }
 
-                           
-                            console.log(playing);
 
                             if(playing == false)
                             {
                               $.ajax({
-                              url: 'https://api.spotify.com/v1/me/player/pause',
-                              contentType: 'application/json',
-                              type: 'PUT',
-                              dataType: 'json',
-                              headers: {
-                                'Authorization': 'Bearer ' + access_token
-                              },
-                              data: JSON.stringify({"device_id":device}),
-                              success: function(response) {    
-                              }
-                            });
-
+                                url: 'https://api.spotify.com/v1/me/player/pause',
+                                contentType: 'application/json',
+                                type: 'PUT',
+                                dataType: 'json',
+                                headers: {
+                                  'Authorization': 'Bearer ' + access_token
+                                },
+                                data: JSON.stringify({"device_id":device}),
+                                success: function(response) {    
+                                }
+                              });
                             }
-
-                            
-                            
+        
                             if(playing == true)
                             {
                               if(previous !== current)
@@ -590,6 +617,19 @@
                   else if($(this).hasClass('selected'))
                   {
                     $(this).toggleClass('selected');
+                    $.ajax({
+                      url: 'https://api.spotify.com/v1/me/player/pause',
+                      contentType: 'application/json',
+                      type: 'PUT',
+                      dataType: 'json',
+                      headers: {
+                      'Authorization': 'Bearer ' + access_token
+                      },
+                      data: JSON.stringify({"device_id":device}),
+                      success: function(response) {    
+                      }
+                    });
+
                     console.log("not selected");
                     clearInterval(pollUser);
                   }       
