@@ -274,6 +274,7 @@
 
                 displayUserInfo();
                 getCurrentSong();
+                //refreshToken();
 
 
                 function getCurrentSong() 
@@ -541,7 +542,7 @@
                           {
                             if($(document.getElementById(obj.active[i].userNameData)).length == 0)
                             {
-                              if(obj.active[i].active === true)
+                              if((obj.active[i].active === true) && (obj.active[i].userNameData != returnUser()))
                               {
                                 $('.left').prepend($('<div/>', {class: 'profTemp', id: obj.active[i].userNameData}).append(
                                   $('<img/>', {src: obj.active[i].profiler, width: 40, height: 40}),

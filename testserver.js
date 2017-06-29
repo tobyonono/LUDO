@@ -189,6 +189,8 @@ app.get('/refresh_token', function(req, res) {
       });
     }
   });
+
+  console.log("token refreshed");
 });
 
 app.post('/updateUserStatus', function(req, res){
