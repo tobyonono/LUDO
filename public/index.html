@@ -407,22 +407,26 @@
                     contentType: 'application/json',
                     success: function(response)
                     {
-                      songLyrics = response.message.body.lyrics.lyrics_body;
-                      songLyrics = songLyrics.slice(0, -74);
+                      if(!response.message.body.lyrics)
+                      {
+                        $(document.getElementsByClassName('lyricsSet')).remove();
+                        $('.lyrics').append($('<pre/>', {class: 'lyricsSet', text: "\n\n\n\n\n\n" + "         lyrics unavailable for this song"}));
+                      }
 
+                      else
+                      {
 
-                      $(document.getElementsByClassName('lyricsSet')).remove();
-                      $('.lyrics').append($('<pre/>', {class: 'lyricsSet', text: "\n" + "\n" + songLyrics + "\nfor cold hard cash you can get the rest on musixmatch.com "}));
+                        songLyrics = response.message.body.lyrics.lyrics_body;
+                        songLyrics = songLyrics.slice(0, -74);
+                        $(document.getElementsByClassName('lyricsSet')).remove();
+                        $('.lyrics').append($('<pre/>', {class: 'lyricsSet', text: "\n" + "\n" + songLyrics + "\nfor cold hard cash you can get the rest on musixmatch.com "}));
+                      }
+                     
                       
-                      //$('.lyrics').append();
+                   
                       console.log(songLyrics);
                     },
-
-                    error: function(xhr, ajaxOptions, thrownError)
-                    {
-                      $(document.getElementsByClassName('lyricsSet')).remove();
-                      //$('.lyrics').append($('<pre/>', {class: 'lyricsSet', text: "lyrics not available for this song"}));
-                    }
+                    
                   });
 
                 }
@@ -732,6 +736,9 @@
                     success: function(response) {
                     }
                   });
+
+                  $(document.getElementsByClassName('selected')).removeClass('selected');
+                  clearInterval(pollUser);
                 });
 
                 document.getElementById('fast-forward').addEventListener('click', function() 
@@ -748,6 +755,9 @@
                       success: function(response) {
                       }
                     });
+
+                   $(document.getElementsByClassName('selected')).removeClass('selected');
+                   clearInterval(pollUser);
                 });
 
                  document.getElementById('play-pause').addEventListener('click', function() 

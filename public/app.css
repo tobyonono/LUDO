@@ -107,6 +107,7 @@ body{
 
 .selected img{
 	border: 1px solid #b32200;
+
   	 	
 }
 
@@ -139,10 +140,11 @@ pre {
 	width: 100%;
 	display: inline-block;
 	margin: 0 auto;
+	
 }
 
 .bottom{
-	overflow: auto;
+	overflow: auto;	
 }
 
 .header{
@@ -159,6 +161,7 @@ pre {
 	font-size: 12px;
 	margin: 0 auto;
 	width: 50%;
+	color: rgba(44,63,82,1);
 }
 
 
@@ -242,8 +245,10 @@ h2{
 	-webkit-filter: invert(100%); filter: invert(100%);
 	margin-left: ;
 	outline-width: 0;
+}
 
-
+.invert:hover{
+	opacity: 50%;
 }
 
 .position{
@@ -370,6 +375,7 @@ div .input{
 	text-align: center;
 }
 
+
 .live{
 	width: 100%;
 	margin: 0 auto;
@@ -384,6 +390,7 @@ div .input{
 	font-size: 12px;
 	display: inline-block;
 	padding-bottom: 10px;
+	color: #b32200;
 	
 }
 
@@ -418,7 +425,7 @@ div .input{
 .onoffswitch-inner:before {
     content: "";
     padding-left: 10px;
-    background-color: #FFFFFF; color: #FFFFFF;
+    background-color: #b32200; color: #FFFFFF;
 }
 .onoffswitch-inner:after {
     content: "";
