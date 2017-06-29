@@ -39,7 +39,7 @@ body{
 
 .grid{
 	display: grid;
-	grid-template-columns: 12% 76% 12%;
+	grid-template-columns: 12% 73% 15%;
 	background-color: black;
 	grid-template-rows: 100%;
 	grid-column-gap: 0px;
@@ -64,6 +64,7 @@ body{
 .right{
 	grid-column: 3;
 	background: white;
+	
 }
 
 .profTemp{
@@ -97,13 +98,7 @@ body{
 	margin-right: 10px;
 	vertical-align: middle;
 }
-.notSelected{
-	color: black;
-}
 
-.notSelected img{
-	border: none;
-}
 
 .selected{
 	color: #b32200;
@@ -115,16 +110,55 @@ body{
   	 	
 }
 
+pre {
+    white-space: pre-wrap;       /* Since CSS 2.1 */
+    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word;       /* Internet Explorer 5.5+ */
+    font-family: 'Cousine', monospace;
+    font-size: 9px;
+    text-transform: lowercase;
+    background-color: white;
+    color: black;
+    text-align: left;
+    border: none;
+    
+}
+
 .lyrics{
 	color: white;
 	text-align: center;
-	font-family:'Cousine', monospace;
-	font-size: 9.5px;
+	font-family: 'Montserrat', sans-serif;
+	font-size: 9px;
+	font-weight: bold;
+	
 }
 
 .lyricsSet{
-	width: 30%;
+	width: 100%;
+	display: inline-block;
+	margin: 0 auto;
+}
+
+.bottom{
+	overflow: auto;
+}
+
+.header{
 	text-align: center;
+	width: 50%;
+	margin: 0 auto;
+}
+
+.header span{
+	text-align: middle;
+	color: black;
+	font-family: 'Cousine', monospace;
+	font-weight: bold;
+	font-size: 12px;
+	margin: 0 auto;
+	width: 50%;
 }
 
 
@@ -222,6 +256,16 @@ h2{
 	cursor: pointer;
 }
 
+
+
+.top{
+	height: 50%;
+}
+
+.bottom{
+	height: 50%;
+}
+
 .swiper-container {
     width: 100%;
     height: 50%;
@@ -280,6 +324,8 @@ h2{
 	-webkit-filter: invert(100%); filter: invert(100%);
 	margin-left: ;
 	outline-width: 0;
+	opacity: 0%;
+	stroke: none;
 }
 
 .swiper-button-next{
@@ -291,6 +337,7 @@ h2{
     -o-transform: scale(-1, -1);
     -webkit-transform: scale(-1, -1);
     transform: scale(-1, -1);
+    stroke: none;
 }
 
 
@@ -323,50 +370,77 @@ div .input{
 	text-align: center;
 }
 
-input:hover{
-   -webkit-filter: invert(70%); filter: invert(70%);
+.live{
+	width: 100%;
+	margin: 0 auto;
+	text-align: center;
+	
 }
 
-input[type=checkbox]{
-	height: 0;
-	width: 0;
-	visibility: hidden;
+#livespan{
+	color: black;
+	font-family: 'Cousine', monospace;
+	font-weight: bold;
+	font-size: 12px;
+	display: inline-block;
+	padding-bottom: 10px;
+	
 }
 
-label {
-	cursor: pointer;
-	text-indent: -9999px;
-	width: 50px;
-	height: 25px;
-	background: grey;
-	display: block;
-	border-radius: 25px;
-	position: relative;
-}
+.onoffswitch {
+    position: relative; 
+    width: 30px;
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+    text-align: center;
+    margin: 0 auto;
+   
 
-label:after {
-	content: '';
-	position: absolute;
-	top: 1.25px;
-	left: 1.25px;
-	width: 22.5px;
-	height: 22.5px;
-	background: #fff;
-	border-radius: 22.5px;
-	transition: 0.3s;
-}
+   
 
-input:checked + label {
-	background: #b32200;
 }
-
-input:checked + label:after {
-	left: calc(100% - 1.25px);
-	transform: translateX(-100%);
+.onoffswitch-checkbox {
+    display: none;
+    margin-top: 2%;
 }
-
-label:active:after {
-	width: 32.5px;
+.onoffswitch-label {
+    display: block; overflow: hidden; cursor: pointer;
+    border: 2px solid #E3E3E3; border-radius: 0px;
+}
+.onoffswitch-inner {
+    display: block; width: 200%; margin-left: -100%;
+    transition: margin 0.3s ease-in 0s;
+}
+.onoffswitch-inner:before, .onoffswitch-inner:after {
+    display: block; float: left; width: 50%; height: 5px; padding: 0; line-height: 5px;
+    font-size: 16px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+    box-sizing: border-box;
+}
+.onoffswitch-inner:before {
+    content: "";
+    padding-left: 10px;
+    background-color: #FFFFFF; color: #FFFFFF;
+}
+.onoffswitch-inner:after {
+    content: "";
+    padding-right: 10px;
+    background-color: #FFFFFF; color: #666666;
+    text-align: right;
+}
+.onoffswitch-switch {
+    display: block; width: 13px; margin: -4px;
+    background: #FFFFFF;
+    position: absolute; top: 0; bottom: 0;
+    right: 21px;
+    border: 2px solid #E3E3E3; border-radius: 0px;
+    transition: all 0.3s ease-in 0s; 
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+    margin-left: 0;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+    right: 0px; 
+    background-color: #b32200;
+    border: 2px solid #b32200;
 }
 
 
