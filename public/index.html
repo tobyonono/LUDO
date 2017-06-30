@@ -311,10 +311,11 @@
                             isPlaying: isPlaying,
                             uri: uri,
                             deviceID: deviceID,
-                            trackID: trackID
+                            trackID: trackID,
+                            songProgress: progress
                           };
 
-                          
+                          updateJSON(jsonPushData);   
 
 
                             if(playbackArray.length == 0) 
@@ -366,7 +367,7 @@
                                     $('<figcaption/>', {class: 'albumName', text: playbackArray[0].albumName}),
                                     $('<img/>', {class: 'invert position', src: 'http://indianassist.mx/img/downArrow.png', width: 23, height: 23})))));
 
-                              console.log(playbackArray[0].trackID + "nsdvjkbsv");
+                              
                               getLyrics(playbackArray);
 
                               swiper.updateSlidesSize()
@@ -563,6 +564,54 @@
                   }, 2000);   
                 }
 
+                function playSong(uri, device)
+                {
+                  $.ajax({
+                    url: 'https://api.spotify.com/v1/me/player/play',
+                    contentType: 'application/json',
+                    type: 'PUT',
+                    dataType: 'json',
+                    headers: {
+                      'Authorization': 'Bearer ' + access_token
+                    },
+                    data: JSON.stringify({"uris":[uri], "device_id":device, "offset": { "uri":uri} }),
+                    success: function(response) {
+                    }
+                  });
+                }
+
+                function seekTo(songProgress, device)
+                {
+                  $.ajax({
+                    url: 'https://api.spotify.com/v1/me/player/seek',
+                    contentType: 'application/json',
+                    type: 'PUT',
+                    dataType: 'json',
+                    headers: {
+                      'Authorization': 'Bearer ' + access_token
+                    },
+                    data: JSON.stringify({'position_ms':songProgress, "device_id":device}),
+                    success: function(response) {
+                    }
+                  });
+                }
+
+                function pauseSong(device)
+                {
+                  $.ajax({
+                    url: 'https://api.spotify.com/v1/me/player/pause',
+                    contentType: 'application/json',
+                    type: 'PUT',
+                    dataType: 'json',
+                    headers: {
+                    'Authorization': 'Bearer ' + access_token
+                    },
+                    data: JSON.stringify({"device_id":device}),
+                    success: function(response) {    
+                    }
+                  });
+                }
+
                 var pollUser;
 
                 $(document).on("click",".profTemp", function()
@@ -598,8 +647,9 @@
                           var changeTo;
                           var deviceID;
                           var playing;
-                          
+                          var progress;
 
+                          
                           
                             for(var i = 0; i < obj.clients.length; i++)
                             {
@@ -608,48 +658,64 @@
                                 console.log(selectedUser + " inside if");
                                 current = JSON.stringify(obj.clients[i]);
                                 changeTo = obj.clients[i].uri;
-                                device = obj.clients[i].deviceID
+                                deviceID = obj.clients[i].deviceID
                                 playing = obj.clients[i].isPlaying;
-                                currentSong = obj.clients[i].songName;
+                                currentSong = obj.clients[i].songName;                                     
                               }
                             }
+
+                            for(var i = 0; i < obj.songProgress.length; i++)
+                              {
+                                if(selectedUser == obj.songProgress[i].userName)
+                                {
+                                  progress = obj.songProgress[i].songProgress;
+                                }                              
+                              }  
 
 
                             if(playing == false)
                             {
-                              $.ajax({
-                                url: 'https://api.spotify.com/v1/me/player/pause',
-                                contentType: 'application/json',
-                                type: 'PUT',
-                                dataType: 'json',
-                                headers: {
-                                  'Authorization': 'Bearer ' + access_token
-                                },
-                                data: JSON.stringify({"device_id":device}),
-                                success: function(response) {    
-                                }
-                              });
+                              pauseSong(deviceID);
                             }
         
-                            if(playing == true)
+                            else if(playing == true)
                             {
                               if(previous !== current && (currentSong !== previousSong))
-                              {          
-                                $.ajax({
-                                  url: 'https://api.spotify.com/v1/me/player/play',
-                                  contentType: 'application/json',
-                                  type: 'PUT',
-                                  dataType: 'json',
-                                  headers: {
-                                    'Authorization': 'Bearer ' + access_token
-                                  },
-                                  data: JSON.stringify({"uris":[changeTo], "device_id":device, "offset": { "uri":changeTo} }),
-                                  success: function(response) {
-                                  }
-                                });
+                              {
+
+                                playSong(changeTo, deviceID);
+                                console.log("in here ioioefhwoehfn;o" + previousUser + selectedUser);
+                                
+                                if(previousUser !== selectedUser)
+                                {   
+                                  console.log(progress); 
+
+                                  $.ajax({
+                                    url: 'https://api.spotify.com/v1/me/player/seek',
+                                    contentType: 'application/json',
+                                    type: 'PUT',
+                                    dataType: 'json',
+                                    headers: {
+                                      'Authorization': 'Bearer ' + access_token
+                                    },
+                                    data: JSON.stringify({'position_ms':progress, 'device_id':deviceID}),
+                                    success: function(response) {
+                                    }
+                                  });                                  
+                                  //seekTo(progress, deviceID);
+                                  previousUser = selectedUser;
+                                  
+                                  console.log("in here ioioefhwoehfn;o" + "previousUser" + selectedUser);
+                                }
+
+                                else if(previousUser === selectedUser)
+                                {
+                                  //playSong(changeTo, deviceID);
+                                }         
+                                
                               } 
 
-                              if(previous !== current && (currentSong == previousSong))  
+                              else if(previous !== current && (currentSong == previousSong))  
                               {  
 
                                 $.ajax({
@@ -670,6 +736,7 @@
                         });
                       previous = current;
                       previousSong = currentSong;
+                      
                       console.log(selectedUser);
                     }, 5000);
                   }
@@ -677,18 +744,7 @@
                   else if($(this).hasClass('selected'))
                   {
                     $(this).toggleClass('selected');
-                    $.ajax({
-                      url: 'https://api.spotify.com/v1/me/player/pause',
-                      contentType: 'application/json',
-                      type: 'PUT',
-                      dataType: 'json',
-                      headers: {
-                      'Authorization': 'Bearer ' + access_token
-                      },
-                      data: JSON.stringify({"device_id":device}),
-                      success: function(response) {    
-                      }
-                    });
+                    pauseSong(deviceID);
 
                     console.log("not selected");
                     clearInterval(pollUser);

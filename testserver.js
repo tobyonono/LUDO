@@ -14,7 +14,7 @@ var client_id = '4b5c02f8015941729381891f20c6f2a1'; // Your client id
 var client_secret = '2448387e7977426ca1b70ef5da956300'; // Your secret
 var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 
-var clientJSON = '{"clients":[]}';
+var clientJSON = '{"clients":[], "songProgress":[]}';
 var activeClients = '{"active":[]}';
 
 
@@ -131,11 +131,14 @@ app.post('/updateJSON', function(req, res){
 
   var obj = JSON.parse(clientJSON);
   var exists = false;
-  user = req.body.userName;
+  var user = req.body.userName;
+  var progress = req.body.songProgress;
 
   if(obj.clients.length === 0)
   {
+    delete obj.clients.songProgress;
     obj.clients.push(req.body);
+    obj.songProgress.push({userName:user, songProgress:progress});
   }
   else if(obj.clients.length > 0)
   {
@@ -143,16 +146,23 @@ app.post('/updateJSON', function(req, res){
     {
       if(obj.clients[i].userName == user)
       {
+        delete obj.clients.songProgress;
         obj.clients[i] = req.body;
         exists = true;
+
+        obj.songProgress[i] = {userName:user, songProgress:progress};
       }
     }
 
-    if(exists == false){
+    if(exists == false)
+    {
+      delete obj.clients.songProgress;
       obj.clients.push(req.body);
+      obj.songProgress.push({userName:user, songProgress:progress});  
     }
   }
   clientJSON = JSON.stringify(obj);
+  console.log(clientJSON);
   res.sendStatus(200)
 });
 
