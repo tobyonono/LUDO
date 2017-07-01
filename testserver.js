@@ -123,8 +123,7 @@ app.get('/callback', function(req, res) {
       }
     });
   }
-      
-  
+     
 });
 
 app.post('/updateJSON', function(req, res){
@@ -174,6 +173,22 @@ app.get('/getJSON', function(req, res){
 app.get('/showLive', function(req, res){
   res.setHeader('Content-Type', 'application/json');
   res.json(activeClients);
+});
+
+app.get('/checkActive', function(req, res){
+  var active = false;
+  var obj = JSON.parse(activeClients);
+  var user = req.body.user;
+  console.log(user);
+  for(var i = 0; i < obj.active.length; i++)
+    {
+      if(obj.active[i].userNameData == user)
+      {
+        obj.active[i] = req.body;
+        active = true;
+      }
+    }
+  res.send({'active': active});
 });
 
 

@@ -555,6 +555,7 @@
                             {
                               $(document.getElementById(obj.active[i].userNameData)).remove();
                               console.log("getting in false");
+                              clearInterval(pollUser);
                             }
                           }
                         }
@@ -579,7 +580,7 @@
                     }
                   });
                 }
-
+/*
                 function seekTo(songProgress, device)
                 {
                   $.ajax({
@@ -595,7 +596,7 @@
                     }
                   });
                 }
-
+*/
                 function pauseSong(device)
                 {
                   $.ajax({
@@ -610,6 +611,23 @@
                     success: function(response) {    
                     }
                   });
+                }
+
+                function checkActive(user)
+                {
+                  var active;
+                   $.ajax({
+                      data: JSON.stringify({"user":user}),
+                      url: '/checkActive',
+                      method: 'GET',
+                      contentType: 'application/json',
+                      dataType: 'json',
+                      success: function(response){
+                        active = response.active;
+                      }
+                    });
+
+                   return active;
                 }
 
                 var pollUser;
@@ -638,7 +656,8 @@
 
                     pollUser = setInterval(function()
                     {
-                      console.log(selectedUser);
+                      
+
                       $.ajax({
                         url: '/getJSON',
                         dataType: 'json',
@@ -688,17 +707,17 @@
                                 
                                 if(previousUser !== selectedUser)
                                 {   
-                                  console.log(progress); 
+                                  console.log(typeof progress); 
+                                  var seekPos = { position_ms: progress};
 
                                   $.ajax({
-                                    url: 'https://api.spotify.com/v1/me/player/seek',
-                                    contentType: 'application/json',
+                                    url: 'https://api.spotify.com/v1/me/player/seek' + '?' + $.param(seekPos),
+                                    contentType: 'application/x-www-form-urlencoded',
                                     type: 'PUT',
-                                    dataType: 'json',
                                     headers: {
                                       'Authorization': 'Bearer ' + access_token
                                     },
-                                    data: JSON.stringify({'position_ms':progress, 'device_id':deviceID}),
+                                    data: {'device_id':deviceID},
                                     success: function(response) {
                                     }
                                   });                                  
@@ -748,8 +767,8 @@
 
                     console.log("not selected");
                     clearInterval(pollUser);
-                  }       
-                  
+                  }
+    
                 }); 
 
                 
