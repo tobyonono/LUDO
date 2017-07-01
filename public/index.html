@@ -580,7 +580,7 @@
                     }
                   });
                 }
-/*
+
                 function seekTo(songProgress, device)
                 {
                   $.ajax({
@@ -596,7 +596,7 @@
                     }
                   });
                 }
-*/
+
                 function pauseSong(device)
                 {
                   $.ajax({
@@ -703,7 +703,6 @@
                               {
 
                                 playSong(changeTo, deviceID);
-                                console.log("in here ioioefhwoehfn;o" + previousUser + selectedUser);
                                 
                                 if(previousUser !== selectedUser)
                                 {   
@@ -724,12 +723,11 @@
                                   //seekTo(progress, deviceID);
                                   previousUser = selectedUser;
                                   
-                                  console.log("in here ioioefhwoehfn;o" + "previousUser" + selectedUser);
                                 }
 
                                 else if(previousUser === selectedUser)
                                 {
-                                  //playSong(changeTo, deviceID);
+                                  playSong(changeTo, deviceID);
                                 }         
                                 
                               } 
