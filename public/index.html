@@ -628,6 +628,7 @@
                     });
 
                    return active;
+                   console.log(active);
                 }
 
                 var pollUser;
@@ -656,7 +657,8 @@
 
                     pollUser = setInterval(function()
                     {
-                      
+
+
 
                       $.ajax({
                         url: '/getJSON',
@@ -669,12 +671,17 @@
                           var progress;
 
                           
-                          
+                          if(checkActive(selectedUser) == false)
+                          {
+                            pauseSong(deviceID);
+                            selectedUser == null;
+                          }
+                      
                             for(var i = 0; i < obj.clients.length; i++)
                             {
                               if(selectedUser == obj.clients[i].userName) 
                               {
-                                console.log(selectedUser + " inside if");
+                                
                                 current = JSON.stringify(obj.clients[i]);
                                 changeTo = obj.clients[i].uri;
                                 deviceID = obj.clients[i].deviceID
@@ -684,13 +691,12 @@
                             }
 
                             for(var i = 0; i < obj.songProgress.length; i++)
+                            {
+                              if(selectedUser == obj.songProgress[i].userName)
                               {
-                                if(selectedUser == obj.songProgress[i].userName)
-                                {
-                                  progress = obj.songProgress[i].songProgress;
-                                }                              
-                              }  
-
+                                progress = obj.songProgress[i].songProgress;
+                              }                              
+                            }  
 
                             if(playing == false)
                             {
@@ -705,8 +711,7 @@
                                 playSong(changeTo, deviceID);
                                 
                                 if(previousUser !== selectedUser)
-                                {   
-                                  console.log(typeof progress); 
+                                {                                     
                                   var seekPos = { position_ms: progress};
 
                                   $.ajax({
@@ -752,9 +757,7 @@
                           }
                         });
                       previous = current;
-                      previousSong = currentSong;
-                      
-                      console.log(selectedUser);
+                      previousSong = currentSong;                      
                     }, 5000);
                   }
 
@@ -763,10 +766,9 @@
                     $(this).toggleClass('selected');
                     pauseSong(deviceID);
 
-                    console.log("not selected");
+                    
                     clearInterval(pollUser);
-                  }
-    
+                  }    
                 }); 
 
                 
@@ -778,7 +780,6 @@
 
                 $(document).on("click",".position", function(){ 
                   var selectedSong;
-                  //$(this).toggleClass('selected');
                   selectedSong = $(this).parent('div').attr('id'); 
 
                    $.ajax({
@@ -793,7 +794,6 @@
                       success: function(response) {
                       }
                     });
-                  console.log(selectedSong);
                 }); 
                 
                 document.getElementById('previous').addEventListener('click', function() 
@@ -810,7 +810,6 @@
                     success: function(response) {
                     }
                   });
-
                   $(document.getElementsByClassName('selected')).removeClass('selected');
                   clearInterval(pollUser);
                 });

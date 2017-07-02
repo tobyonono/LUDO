@@ -161,7 +161,6 @@ app.post('/updateJSON', function(req, res){
     }
   }
   clientJSON = JSON.stringify(obj);
-  console.log(clientJSON);
   res.sendStatus(200)
 });
 
@@ -188,7 +187,10 @@ app.get('/checkActive', function(req, res){
         active = true;
       }
     }
-  res.send({'active': active});
+
+  var result = {'active': active};
+  res.send(JSON.stringify(result));
+  console.log(result);
 });
 
 
