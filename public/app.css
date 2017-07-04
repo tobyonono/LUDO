@@ -16,7 +16,7 @@ body{
 #login h1{
 	text-align: center;
 	font-size: 50px;
-	color: #b32200;
+	color: white;
 	padding-bottom: 2.5%;
 }
 
@@ -234,7 +234,7 @@ h2{
 }
 
 .albumName{
-	color: rgba(44,63,82,1);
+	color: #44B8E7;
 }
 
 #add{

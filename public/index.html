@@ -214,6 +214,8 @@
         }
 
 
+
+
         var params = getHashParams();
 
         var access_token = params.access_token,
@@ -385,7 +387,7 @@
                             $('#loggedin').show();
                         }
                     });
-                    setTimeout(getCurrentSong, 5000);
+                    setTimeout(getCurrentSong, 2000);
                 }
 
                 function getLyrics(array)
@@ -543,7 +545,7 @@
                           {
                             if($(document.getElementById(obj.active[i].userNameData)).length == 0)
                             {
-                              if((obj.active[i].active === true) && (obj.active[i].userNameData != returnUser()))
+                              if((obj.active[i].active !== undefined) && (obj.active[i].active === true) && (obj.active[i].userNameData != returnUser()))
                               {
                                 $('.left').prepend($('<div/>', {class: 'profTemp', id: obj.active[i].userNameData}).append(
                                   $('<img/>', {src: obj.active[i].profiler, width: 40, height: 40}),
@@ -758,7 +760,7 @@
                         });
                       previous = current;
                       previousSong = currentSong;                      
-                    }, 5000);
+                    }, 2000);
                   }
 
                   else if($(this).hasClass('selected'))
@@ -798,6 +800,7 @@
                 
                 document.getElementById('previous').addEventListener('click', function() 
                 {
+                  clearInterval(pollUser);
                   $.ajax({
                     url: 'https://api.spotify.com/v1/me/player/previous',
                     contentType: 'application/json',
@@ -811,34 +814,37 @@
                     }
                   });
                   $(document.getElementsByClassName('selected')).removeClass('selected');
-                  clearInterval(pollUser);
+                  
                 });
 
                 document.getElementById('fast-forward').addEventListener('click', function() 
                 {
-                   $.ajax({
-                      url: 'https://api.spotify.com/v1/me/player/next',
-                      contentType: 'application/json',
-                      type: 'POST',
-                      dataType: 'json',
-                      headers: {
-                        'Authorization': 'Bearer ' + access_token
-                      },
-                      data: "",
-                      success: function(response) {
-                      }
-                    });
+                  clearInterval(pollUser);
+                  $.ajax({
+                    url: 'https://api.spotify.com/v1/me/player/next',
+                    contentType: 'application/json',
+                    type: 'POST',
+                    dataType: 'json',
+                    headers: {
+                      'Authorization': 'Bearer ' + access_token
+                    },
+                    data: "",
+                    success: function(response) {
+                    }
+                  });
 
                    $(document.getElementsByClassName('selected')).removeClass('selected');
-                   clearInterval(pollUser);
+                   
                 });
 
                  document.getElementById('play-pause').addEventListener('click', function() 
                 {
-                   $.ajax({
-                      url: 'https://api.spotify.com/v1/me/player/next',
+                  if($(this).hasClass('paused'))
+                  {
+                    $.ajax({
+                      url: 'https://api.spotify.com/v1/me/player/play',
                       contentType: 'application/json',
-                      type: 'POST',
+                      type: 'PUT',
                       dataType: 'json',
                       headers: {
                         'Authorization': 'Bearer ' + access_token
@@ -847,6 +853,64 @@
                       success: function(response) {
                       }
                     });
+
+                    $(this).toggleClass('paused');
+                    $('#play-pause').attr('src', 'https://cdn0.iconfinder.com/data/icons/octicons/1024/playback-pause-24.png');
+                  }
+
+                  else
+                  {
+                    var deviceID;
+                    $.ajax({
+                      url: '/getJSON',
+                      dataType: 'json',
+                      success: function(response) 
+                      {
+                        obj = JSON.parse(response);  
+                        var user = returnUser()
+                        for(var i = 0; i < obj.clients.length; i++)
+                        {
+                          if(user == obj.clients[i].userName) 
+                          {
+                            deviceID = obj.clients[i].deviceID;                                    
+                          } 
+                        } 
+                      }          
+                    });
+
+                    pauseSong(deviceID);
+                    $(this).toggleClass('paused');
+                   
+                    $('#play-pause').attr('src', 'https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_play_arrow_48px-512.png');
+
+                  }
+                  
+                });
+
+                 window.addEventListener("beforeunload", function()
+                 {
+                  var user = returnUser();
+                  if(user)
+                  {
+                    var jsonData = {
+                      userNameData: user,
+                      active: false,
+                      profiler: profiler
+                    }
+
+                    $.ajax({
+                      data: JSON.stringify(jsonData),
+                      url: '/updateUserStatus',
+                      method: 'POST',
+                      contentType: 'application/json',
+                      dataType: 'html',
+                      success: function(response) {
+              
+                        }
+                    });
+                  }
+
+                  return confirmationMessage;                            //Webkit, Safari, Chrome
                 });
 
                 //}
