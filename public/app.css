@@ -13,12 +13,39 @@ body{
 	font-family: "Monoton";
 }
 
+.video-background {
+  background: #000;
+  position: fixed;
+  top: 0; right: 0; bottom: 0; left: 0;
+  z-index: -99;
+}
+.video-foreground,
+.video-background iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
 #login h1{
 	text-align: center;
+	float: top;
 	font-size: 50px;
 	color: white;
 	padding-bottom: 2.5%;
 }
+
+#login h2{
+	font-family: 'Cousine', sans-serif;
+	font-size: 9px;
+	color: white;
+	text-transform: lowercase;
+	margin: 0;
+	font-weight: bold;
+}
+
 
 #loggedin{
 	height: 100vh;
@@ -175,12 +202,7 @@ pre {
 }
 */
 
-h2{
-	font-family: 'Montserrat', sans-serif;
-	font-size: 12px;
-	color: #fafafa;
-	text-transform: uppercase;
-}
+
 
 #loggedin{
 	width: 100%;
@@ -234,7 +256,7 @@ h2{
 }
 
 .albumName{
-	color: #44B8E7;
+	color: #333;
 }
 
 #add{
@@ -371,7 +393,7 @@ div .input{
 
 
 .player{
-	padding-top: 5%;
+	padding-top: 2.5%;
 	text-align: center;
 }
 
@@ -449,6 +471,36 @@ div .input{
     background-color: #b32200;
     border: 2px solid #b32200;
 }
+
+.footprint{
+	font-family: 'Cousine';
+	font-weight: bold;
+	font-size: 9px;
+	text-transform: lowercase;
+	color: #FE6A00;
+	text-align: center;
+	padding-top: 20%;
+	width: 100%;	
+}
+
+.footprintContainer{
+	max-width: 100%;
+	margin: 0px;
+	background: repeat;
+	padding-bottom: 5%;
+
+}
+
+.footprintContainer img{
+	display: inline-block;
+  	max-width: 12.5%;
+  	max-height: auto;
+  	margin: 10%;
+  	padding: 0px;
+
+}
+
+
 
 
 ::-webkit-scrollbar-track

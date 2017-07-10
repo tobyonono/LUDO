@@ -16,9 +16,21 @@
 
 <body>
     <div id="login">
+      <div class="video-background">
+        <div class="video-foreground">
+          <iframe id="backgroundvid" src="https://www.youtube.com/embed/YkfULbJ9GVU?loop=0&controls=0&showinfo=0&rel=0&autoplay=1&mute=1" frameborder="0" allowfullscreen></iframe>
+        </div>
+
+        
+      </div>
         <h1>LUDO</h1>
-        <a href="/login"><img src="http://www.iconsplace.com/icons/preview/black/spotify-256.png" class="invert" width="40" height="40" /></a>
-        <h2>L O G I N</h2>
+        <a href="/login"><img src="http://shamtrax.com/wp-content/uploads/2015/04/6274-spotify-logo-horizontal-white-rgb.png" class="" width="100" /></a>
+          <div class="logintext">
+            <img class="invert flip" src="https://maxcdn.icons8.com/Share/icon/Arrows//down41600.png" width='10' height='10' />
+            <h2>LOGIN</h2>
+          </div>
+        
+        
     </div>
     <div id="loggedin">
         <div class="grid">
@@ -150,6 +162,16 @@
                   <input type="image" class="invert" id="play-pause" src="https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_play_arrow_48px-512.png"  width="25" height="25" />
                   <input type="image" class="invert rotate" id="fast-forward" src="http://freeiconbox.com/icon/256/20648.png" class="flip" width="25" height="25" />
                 </div> 
+                
+                <div class ="footprint">
+                  <span>footprint</span>
+                  <img class="invert" src="https://maxcdn.icons8.com/Share/icon/Arrows//down41600.png" width='10' height='10' />
+                  <span>videos</span>
+                  <img class="invert" src="https://maxcdn.icons8.com/Share/icon/Arrows//down41600.png" width='10' height='10' />
+                  <div class='footprintContainer'>
+
+                  </div>
+                </div>
                    
             </div>
             <div class="right">
@@ -183,6 +205,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.2/js/swiper.jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.2/js/swiper.jquery.min.js"></script>
     <script type="text/javascript" src="http://tracking.musixmatch.com/t1.0/AMa6hJCIEzn1v8RuOP"></script>
+    
+    
     <script>
       var swiper = new Swiper('.swiper-container', {
         pagination: '.swiper-pagination',
@@ -199,7 +223,7 @@
     <script>
     (function() {
         /**
-         * Obtains parameters from the hash of the URL
+         * fuck off looking at my code you snake
          * @return Object
          */
         function getHashParams() 
@@ -233,7 +257,7 @@
                 access_token = data.access_token;
             });
 
-          setTimeout(refreshToken, 600000);
+          setTimeout(refreshToken, 1000000);
         }
 
         if (error)
@@ -297,7 +321,7 @@
                           songLength = response.timestamp;
                           isPlaying = response.is_playing;
                           uri = response.item.uri;
-                          deviceID = response.device.id
+                          deviceID = response.device.id;
                           trackID = response.item.id;
 
                           var user = returnUser();
@@ -332,6 +356,27 @@
                                     $('<figcaption/>', {class: 'albumName', text: playbackArray[0].albumName}),
                                     $('<img/>', {class: 'invert position', src: 'http://indianassist.mx/img/downArrow.png', alt: playbackArray[0].trackID, width: 23, height: 23})))));
 
+                              /*Tumblr Call
+                              $.ajax({   
+                                url: 'https://api.tumblr.com/v2/tagged',
+                                method: "GET",
+                                contentType: "application/json",
+                                dataType: 'jsonp',
+                                data: {tag: artistName, limit: '200', api_key: 'NdKsnACtQWQ3Ffn5Wx81lCZR16UtKEr8ewXRtfvKFnbsjLqUW5', "format": "jsonp"},
+                                success: function(response) 
+                                {
+                                  for(var i = 0; i < response.response.length; i++)
+                                  {
+                                    if(response.response[i].type === "photo")
+                                    {
+                                       $('.footprintContainer').prepend($('<img/>', {class: '.footprintContainer img', src: response.response[i].photos[0].original_size.url}));
+                                      console.log(response.response[i].photos[0].original_size.url);
+                                    }
+                                  }
+                                  console.log(response);
+                                }
+                              });
+                              */
                                 swiper.updateSlidesSize();
                                 getLyrics(playbackArray);
 
@@ -369,6 +414,27 @@
                                     $('<figcaption/>', {class: 'albumName', text: playbackArray[0].albumName}),
                                     $('<img/>', {class: 'invert position', src: 'http://indianassist.mx/img/downArrow.png', width: 23, height: 23})))));
 
+                              /* Tumblr call
+                              $.ajax({   
+                                url: 'https://api.tumblr.com/v2/tagged',
+                                method: "GET",
+                                contentType: "application/json",
+                                dataType: 'jsonp',
+                                data: {tag: artistName, limit: 10, api_key: 'NdKsnACtQWQ3Ffn5Wx81lCZR16UtKEr8ewXRtfvKFnbsjLqUW5', "format": "jsonp"},
+                                success: function(response) 
+                                {
+                                  for(var i = 0; i < response.response.length; i++)
+                                  {
+                                    if(response.response[i].type === "photo")
+                                    {
+                                       $('.footprintContainer').prepend($('<img/>', {class: '.footprintContainer img', src: response.response[i].photos[0].original_size.url}));
+                                      console.log(response.response[i].photos[0].original_size.url);
+                                    }
+                                  }
+                                  console.log(response);
+                                }
+                              });
+                              */
                               
                               getLyrics(playbackArray);
 
@@ -545,7 +611,7 @@
                           {
                             if($(document.getElementById(obj.active[i].userNameData)).length == 0)
                             {
-                              if((obj.active[i].active !== undefined) && (obj.active[i].active === true) && (obj.active[i].userNameData != returnUser()))
+                              if((obj.active[i].userNameData !== undefined) && (obj.active[i].active === true) && (obj.active[i].userNameData != returnUser()))
                               {
                                 $('.left').prepend($('<div/>', {class: 'profTemp', id: obj.active[i].userNameData}).append(
                                   $('<img/>', {src: obj.active[i].profiler, width: 40, height: 40}),
@@ -909,8 +975,6 @@
                         }
                     });
                   }
-
-                  return confirmationMessage;                            //Webkit, Safari, Chrome
                 });
 
                 //}
