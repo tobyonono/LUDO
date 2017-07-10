@@ -4,7 +4,7 @@
   "description": "FYP",
   "main": "testserver.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node testserver.js"
   },
   "repository": {
     "type": "git",

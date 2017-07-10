@@ -270,6 +270,6 @@ app.post('/updateUserStatus', function(req, res){
 
 
 console.log('Listening on 8888');
-server.listen(8888);
+server.listen(process.env.PORT || 8888);
 
 
