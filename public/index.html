@@ -323,7 +323,7 @@
                               $('.swiper-wrapper').prepend($('<div/>', {class: 'swiper-slide swiper-slide-active'}).append(
                                 $('<div/>', {class: 'getCurrentTrack'}).append(
                                   $('<div/>', {class: 'trackTemplate', id: playbackArray[0].trackID}).append(
-                                    $('<img/>', {src: jsonPushData.albumArt, width: 350, height: 350}),
+                                    $('<img/>', {src: jsonPushData.albumArt}),
                                     $('<figcaption/>', {class: 'songName', text: playbackArray[0].songName}),
                                     $('<figcaption/>', {class: 'artistName', text: playbackArray[0].artistName}),
                                     $('<figcaption/>', {class: 'albumName', text: playbackArray[0].albumName}),
@@ -381,7 +381,7 @@
                               $('.swiper-wrapper').prepend($('<div/>', {class: 'swiper-slide'}).append(
                                 $('<div/>', {class: 'getCurrentTrack'}).append(
                                   $('<div/>', {class: 'trackTemplate', id: playbackArray[0].trackID}).append(
-                                    $('<img/>', {src: jsonPushData.albumArt, width: 350, height: 350}),
+                                    $('<img/>', {src: jsonPushData.albumArt}),
                                     $('<figcaption/>', {class: 'songName', text: playbackArray[0].songName}),
                                     $('<figcaption/>', {class: 'artistName', text: playbackArray[0].artistName}),
                                     $('<figcaption/>', {class: 'albumName', text: playbackArray[0].albumName}),
