@@ -54,7 +54,7 @@ app.get('/login', function(req, res) {
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
 
-  // your application requests authorization
+  // application requests authorization
   var scope = 'user-read-private user-read-email user-read-currently-playing user-read-playback-state user-library-modify user-modify-playback-state ';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
@@ -69,13 +69,13 @@ app.get('/login', function(req, res) {
 
 app.get('/callback', function(req, res) {
 
-  // your application requests refresh and access tokens
+  // application requests refresh and access tokens
   // after checking the state parameter
   var name;
   var code = req.query.code || null;
   var state = req.query.state || null;
   var storedState = req.cookies ? req.cookies[stateKey] : null;
-  //console.log(req.cookies[stateKey] + "jsdjksdb");
+  
 
   if (state === null || state !== storedState) 
   {
@@ -136,6 +136,7 @@ app.post('/updateJSON', function(req, res){
   if(obj.clients.length === 0)
   {
     delete obj.clients.songProgress;
+    delete req.body.songProgress;
     obj.clients.push(req.body);
     obj.songProgress.push({userName:user, songProgress:progress});
   }
@@ -146,6 +147,7 @@ app.post('/updateJSON', function(req, res){
       if(obj.clients[i].userName == user)
       {
         delete obj.clients.songProgress;
+        delete req.body.songProgress;
         obj.clients[i] = req.body;
         exists = true;
 
@@ -156,11 +158,13 @@ app.post('/updateJSON', function(req, res){
     if(exists == false)
     {
       delete obj.clients.songProgress;
+      delete req.body.songProgress;
       obj.clients.push(req.body);
       obj.songProgress.push({userName:user, songProgress:progress});  
     }
   }
   clientJSON = JSON.stringify(obj);
+  console.log(clientJSON);
   res.sendStatus(200)
 });
 

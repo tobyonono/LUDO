@@ -18,19 +18,15 @@
     <div id="login">
       <div class="video-background">
         <div class="video-foreground">
-          <iframe id="backgroundvid" src="https://www.youtube.com/embed/YkfULbJ9GVU?loop=0&controls=0&showinfo=0&rel=0&autoplay=1&mute=1" frameborder="0" allowfullscreen></iframe>
-        </div>
-
-        
+          <iframe id="backgroundvid" src="https://www.youtube.com/embed/YkfULbJ9GVU?loop=1&controls=0&showinfo=0&rel=0&autoplay=1&mute=1" frameborder="0" allowfullscreen></iframe>
+        </div>  
       </div>
         <h1>LUDO</h1>
         <a href="/login"><img src="img/spotifyicon.png" class="" width="100" /></a>
           <div class="logintext">
             <img class="invert flip" src="https://maxcdn.icons8.com/Share/icon/Arrows//down41600.png" width='10' height='10' />
             <h2>LOGIN</h2>
-          </div>
-        
-        
+          </div>     
     </div>
     <div id="loggedin">
         <div class="grid">
@@ -130,22 +126,14 @@
                     <img class="swiper-button-prev swiper-button-white" src="https://cdn0.iconfinder.com/data/icons/slim-square-icons-basics/100/basics-05-128.png" />
                     <img class="swiper-button-next swiper-button-white" src="https://cdn0.iconfinder.com/data/icons/slim-square-icons-basics/100/basics-05-128.png" />
                   </div> 
+
                 <div class="player">
                   <input type="image" class="invert" id="previous" src="img/rewind.png" width="25" height="25" />
                   <input type="image" class="invert" id="play-pause" src="https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_play_arrow_48px-512.png"  width="25" height="25" />
                   <input type="image" class="invert rotate" id="fast-forward" src="img/rewind.png" class="flip" width="25" height="25" />
                 </div> 
                 
-                <div class ="footprint">
-                  <span>footprint</span>
-                  <img class="invert" src="https://maxcdn.icons8.com/Share/icon/Arrows//down41600.png" width='10' height='10' />
-                  <span>videos</span>
-                  <img class="invert" src="https://maxcdn.icons8.com/Share/icon/Arrows//down41600.png" width='10' height='10' />
-                  <div class='footprintContainer'>
-
-                  </div>
-                </div>
-                   
+                     
             </div>
             <div class="right">
               <div class="top">
@@ -181,16 +169,24 @@
     
     
     <script>
+      var slidesPerView = 3;
       var swiper = new Swiper('.swiper-container', {
         pagination: '.swiper-pagination',
-        slidesPerView: 4,
+        slidesPerView: slidesPerView,
         keyboardControl: true,
         centeredSlides: true,
         paginationClickable: true,
         spaceBetween: 100,
         nextButton: '.swiper-button-next',
         prevButton: '.swiper-button-prev',
+        breakpoints: {
+          768: {
+            slidesPerView: 1,
+            spaceBetween: 10,
+          }
+        },
       });
+
 
     </script>
     <script>
@@ -209,7 +205,6 @@
             }
             return hashParams;
         }
-
 
 
 
@@ -327,7 +322,8 @@
                                     $('<figcaption/>', {class: 'songName', text: playbackArray[0].songName}),
                                     $('<figcaption/>', {class: 'artistName', text: playbackArray[0].artistName}),
                                     $('<figcaption/>', {class: 'albumName', text: playbackArray[0].albumName}),
-                                    $('<img/>', {class: 'invert position', src: 'https://indianassist.mx/img/downArrow.png', alt: playbackArray[0].trackID, width: 23, height: 23})))));
+                                    $('<img/>', {class: 'invert position', src: 'https://indianassist.mx/img/downArrow.png', 
+                                      alt: playbackArray[0].trackID, width: 23, height: 23})))));
 
                               /*Tumblr Call
                               $.ajax({   
@@ -523,7 +519,6 @@
                     dataType: 'json',
                     success: function(response) 
                     {
-                      console.log(response + " inside get Current Song");
                     }
                   });
                 }
@@ -579,7 +574,6 @@
                         if(previous !== current)
                         {
                           var obj = JSON.parse(response);
-                          console.log(obj);
                           for(var i = 0; i < obj.active.length; i++)
                           {
                             if($(document.getElementById(obj.active[i].userNameData)).length == 0)
@@ -595,7 +589,6 @@
                             else if(obj.active[i].active === false)
                             {
                               $(document.getElementById(obj.active[i].userNameData)).remove();
-                              console.log("getting in false");
                               clearInterval(pollUser);
                             }
                           }
@@ -766,7 +759,6 @@
                                     success: function(response) {
                                     }
                                   });                                  
-                                  //seekTo(progress, deviceID);
                                   previousUser = selectedUser;
                                   
                                 }
@@ -839,6 +831,7 @@
                 
                 document.getElementById('previous').addEventListener('click', function() 
                 {
+                  $(document.getElementsByClassName('selected')).removeClass('selected')
                   clearInterval(pollUser);
                   $.ajax({
                     url: 'https://api.spotify.com/v1/me/player/previous',
@@ -852,12 +845,13 @@
                     success: function(response) {
                     }
                   });
-                  $(document.getElementsByClassName('selected')).removeClass('selected');
+                  ;
                   
                 });
 
                 document.getElementById('fast-forward').addEventListener('click', function() 
                 {
+                  $(document.getElementsByClassName('selected')).removeClass('selected')
                   clearInterval(pollUser);
                   $.ajax({
                     url: 'https://api.spotify.com/v1/me/player/next',
@@ -872,7 +866,7 @@
                     }
                   });
 
-                   $(document.getElementsByClassName('selected')).removeClass('selected');
+                   ;
                    
                 });
 
