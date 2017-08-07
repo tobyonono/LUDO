@@ -541,17 +541,23 @@ div .input{
         background: white;
     }
 
-    h1
+    #loggedin h1
     {
     	display: none;
     }
 
-    .login
+    #login
     {
-    	background: black;
+    	padding-top: 50%;
     }
 
+    
     .video-background
+    {
+    	background-color: black;
+    }
+
+    .video-foreground
     {
     	display: none;
     }
