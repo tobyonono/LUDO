@@ -549,9 +549,9 @@ div .input{
     .grid
     {
 		display: grid;
-		grid-template-rows: 70px 9.5% 74%;
+		grid-template-rows: 70px 78% 4.5%;
 		background-color: black;
-		grid-template-columns: 100% ;
+		grid-template-columns: 100%;
 		grid-row-gap: 0px;
 		overflow: hidden;
 	}
@@ -561,7 +561,7 @@ div .input{
 		grid-row: 1;
 		overflow: auto;
 		overflow-y: hidden;
-		background-color: black;
+		background-color: #242424;
 		grid-column: 1;
 		display: flex;
 		justify-content: center;
@@ -571,8 +571,8 @@ div .input{
 
 	.center
 	{
-		grid-row: 3;
-		background-color: black;
+		grid-row: 2;
+		background: linear-gradient(#242424, black);
 		
 		overflow: hidden;
 		grid-column: 1;
@@ -580,7 +580,7 @@ div .input{
 
 	.right
 	{
-		grid-row: 2;
+		grid-row: 3;
 		background-color: black;
 		grid-column: 1;
 		height: 50%;
@@ -639,7 +639,10 @@ div .input{
 		vertical-align: middle;
 	}
 
-	
+	.player
+	{
+		display: none;
+	}
 
 	
 
@@ -712,7 +715,7 @@ div .input{
 	::-webkit-scrollbar-track
 	{
 	  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-	  background-color: black;
+	  background-color: grey;
 	}
 
 	::-webkit-scrollbar-thumb
