@@ -124,6 +124,7 @@ body{
 	padding: 2px;
 	margin-right: 10px;
 	vertical-align: middle;
+
 }
 
 
@@ -549,7 +550,7 @@ div .input{
     .grid
     {
 		display: grid;
-		grid-template-rows: 70px 78% 4.5%;
+		grid-template-rows: 90px 70% 4.5%;
 		background-color: black;
 		grid-template-columns: 100%;
 		grid-row-gap: 0px;
@@ -584,7 +585,7 @@ div .input{
 		background-color: black;
 		grid-column: 1;
 		height: 50%;
-		padding-top: 5%;
+		padding-top: 0%;
 		
 	}
 
@@ -598,7 +599,7 @@ div .input{
 	.profTemp
 	{
 		font-size: 8px;
-		max-width: 40px;
+		max-width: 60px;
 		margin-right: 5%;
 				
 	}
@@ -607,11 +608,13 @@ div .input{
 	{
 		margin-right: auto;
 		margin-left: auto;
+		height: 60px;
+		width: 60px;
 	}
 
 	.profTemp span
 	{
-		max-width: 40px;
+		max-width: 60px;
 		overflow: hidden;
 	    text-overflow: ellipsis;
 	    white-space: nowrap;
@@ -626,7 +629,7 @@ div .input{
 		text-transform: lowercase;
 		font-size: 9.5px;
 		text-align: center;
-		padding-top: 7%;
+		padding-top: 0%;
 
 	}
 
@@ -670,7 +673,7 @@ div .input{
 
 	.swiper-container 
 	{
-	    height: 85%;
+	    height: 95%;
 	    margin-bottom: 1%;
 	    padding-top: 0.5%;
 	  
@@ -727,4 +730,5 @@ div .input{
 
 
 }
+
 
