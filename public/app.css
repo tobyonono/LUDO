@@ -576,12 +576,12 @@ div .input{
 	.left
 	{
 		grid-row: 1;
-		overflow: auto;
+		overflow-x: auto;
 		overflow-y: hidden;
 		background-color: #242424;
 		grid-column: 1;
 		display: flex;
-		justify-content: center;
+		justify-content: left;
 		text-align: center;
 		color: white;
 	}
