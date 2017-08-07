@@ -12,7 +12,7 @@ var cheerio = require('cheerio');
 
 var client_id = '4b5c02f8015941729381891f20c6f2a1'; // Your client id
 var client_secret = '2448387e7977426ca1b70ef5da956300'; // Your secret
-var redirect_uri = 'https://protected-coast-38333.herokuapp.com/callback'; // Your redirect uri
+var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 
 var clientJSON = '{"clients":[], "songProgress":[]}';
 var activeClients = '{"active":[]}';
