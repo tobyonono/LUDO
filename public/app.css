@@ -103,6 +103,7 @@ body{
 	margin-left: 15px;
 	
 	
+	
 }
 
 .profTemp:hover{
@@ -124,6 +125,8 @@ body{
 	padding: 2px;
 	margin-right: 10px;
 	vertical-align: middle;
+	height: 40px;
+	width: 40px;
 
 }
 
@@ -638,6 +641,14 @@ div .input{
 
 	}
 
+	.profTemp:hover
+	{
+		color: white;
+		
+	}
+
+
+
 	.getCurrentTrack
 	{
 		font-family: 'Cousine', monospace;
@@ -734,12 +745,12 @@ div .input{
 	::-webkit-scrollbar-track
 	{
 	  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-	  background-color: grey;
+	  background-color: #242424;
 	}
 
 	::-webkit-scrollbar-thumb
 	{
-	  background-color: #b32200;
+	  background-color: white;
 
 	  
 	}
