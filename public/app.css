@@ -534,7 +534,7 @@ div .input{
    height: 2px;
 }
 
-@media screen and (max-width: 768px) {
+@media only screen and (max-width: 768px) {
     body 
     {
         background: white;
