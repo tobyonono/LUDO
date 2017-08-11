@@ -130,9 +130,9 @@
                   </div> 
 
                 <div class="player">
-                  <input type="image" class="invert" id="previous" src="img/rewind.png" width="25" height="25" />
-                  <input type="image" class="invert" id="play-pause" src="https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_play_arrow_48px-512.png"  width="25" height="25" />
-                  <input type="image" class="invert rotate" id="fast-forward" src="img/rewind.png" class="flip" width="25" height="25" />
+                  <input type="image" class="invert" id="previous" src="https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_fast_rewind_48px-20.png"/>
+                  <input type="image" class="invert" id="play-pause" src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-play-20.png" />
+                  <input type="image" class="invert rotate" id="fast-forward" src="https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_fast_rewind_48px-20.png" class="flip" />
                 </div> 
                 
                      
@@ -324,8 +324,8 @@
                                     $('<figcaption/>', {class: 'songName', text: playbackArray[0].songName}),
                                     $('<figcaption/>', {class: 'artistName', text: playbackArray[0].artistName}),
                                     $('<figcaption/>', {class: 'albumName', text: playbackArray[0].albumName}),
-                                    $('<img/>', {class: 'invert position', src: 'https://indianassist.mx/img/downArrow.png', 
-                                      alt: playbackArray[0].trackID, width: 23, height: 23})))));
+                                    $('<img/>', {class: 'invert position', src: 'https://cdn3.iconfinder.com/data/icons/watchify-v1-0/70/add-70px-20.png', width: 23, height: 23, 
+                                      alt: playbackArray[0].trackID})))));
 
                               /*Tumblr Call
                               $.ajax({   
@@ -371,6 +371,15 @@
 
                             else if ((playbackArray[0].songName != songName)) 
                             {
+
+                              for(var num = 0; num < playbackArray.length; num++)
+                              {
+                                if(songName === playbackArray[num].songName)
+                                {
+                                  swiper.removeSlide(num);
+                                }
+                              }
+
                               var startIndex = 0;
                               var numElemtoRemove = 0;
                               playbackArray.splice(startIndex, numElemtoRemove, jsonPushData);
@@ -383,7 +392,7 @@
                                     $('<figcaption/>', {class: 'songName', text: playbackArray[0].songName}),
                                     $('<figcaption/>', {class: 'artistName', text: playbackArray[0].artistName}),
                                     $('<figcaption/>', {class: 'albumName', text: playbackArray[0].albumName}),
-                                    $('<img/>', {class: 'invert position', src: 'https://indianassist.mx/img/downArrow.png', width: 23, height: 23})))));
+                                    $('<img/>', {class: 'invert position', src: 'https://cdn3.iconfinder.com/data/icons/watchify-v1-0/70/add-70px-20.png', width: 23, height: 23})))));
 
                               /* Tumblr call
                               $.ajax({   
@@ -814,6 +823,7 @@
                 });
 
                 $(document).on("click",".position", function(){ 
+                  
                   var selectedSong;
                   selectedSong = $(this).parent('div').attr('id'); 
 
@@ -829,6 +839,12 @@
                       success: function(response) {
                       }
                     });
+
+                    $(this).attr('src', 'https://cdn1.iconfinder.com/data/icons/freeline/32/accept_check_ok_outline_tick_yes-20.png');
+                    
+                   
+
+
                 }); 
                 
                 document.getElementById('previous').addEventListener('click', function() 
@@ -890,7 +906,7 @@
                     });
 
                     $(this).toggleClass('paused');
-                    $('#play-pause').attr('src', 'https://cdn0.iconfinder.com/data/icons/octicons/1024/playback-pause-24.png');
+                    $('#play-pause').attr('src', 'https://cdn2.iconfinder.com/data/icons/picol-vector/32/controls_pause-20.png');
                   }
 
                   else
@@ -916,7 +932,7 @@
                     pauseSong(deviceID);
                     $(this).toggleClass('paused');
                    
-                    $('#play-pause').attr('src', 'https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_play_arrow_48px-512.png');
+                    $('#play-pause').attr('src', 'https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-play-20.png');
 
                   }
                   

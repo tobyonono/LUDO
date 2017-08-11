@@ -164,7 +164,6 @@ app.post('/updateJSON', function(req, res){
     }
   }
   clientJSON = JSON.stringify(obj);
-  console.log(clientJSON);
   res.sendStatus(200)
 });
 
@@ -182,7 +181,6 @@ app.get('/checkActive', function(req, res){
   var active = false;
   var obj = JSON.parse(activeClients);
   var user = req.body.user;
-  console.log(user);
   for(var i = 0; i < obj.active.length; i++)
     {
       if(obj.active[i].userNameData == user)
@@ -194,7 +192,6 @@ app.get('/checkActive', function(req, res){
 
   var result = {'active': active};
   res.send(JSON.stringify(result));
-  console.log(result);
 });
 
 
@@ -268,7 +265,6 @@ app.post('/updateUserStatus', function(req, res){
   }
   
   activeClients = JSON.stringify(obj);
-  console.log(activeClients);
   res.sendStatus(200)
 });
 

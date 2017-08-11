@@ -66,7 +66,7 @@ body{
 
 .grid{
 	display: grid;
-	grid-template-columns: 12% 73% 15%;
+	grid-template-columns: 200px auto 15%;
 	background-color: black;
 	grid-template-rows: 100%;
 	grid-column-gap: 0px;
@@ -80,11 +80,12 @@ body{
 	grid-column: 1;
 	overflow: auto;
 	background-color: white;
+	min-width: 190px;
 }
 
 .center{
 	grid-column: 2;
-	background: black;
+	background: linear-gradient(#242424, black);
 	overflow: auto;
 }
 
@@ -101,9 +102,20 @@ body{
 	margin-top: 10px;
 	height: 60px;
 	margin-left: 15px;
+
+
 	
 	
 	
+}
+
+.profTemp span
+{
+	max-width: 90px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	display: inline-block;
 }
 
 .profTemp:hover{
@@ -280,6 +292,7 @@ pre {
 
 .position{
 	float: right;
+	border: none;
 	
 }
 
@@ -359,24 +372,11 @@ pre {
 }
 
 .swiper-button-prev{
-	content:url('https://cdn0.iconfinder.com/data/icons/slim-square-icons-basics/100/basics-05-128.png');
-	-webkit-filter: invert(100%); filter: invert(100%);
-	margin-left: ;
-	outline-width: 0;
-	opacity: 0%;
-	stroke: none;
+	display: none;
 }
 
 .swiper-button-next{
-	content:url('https://cdn0.iconfinder.com/data/icons/slim-square-icons-basics/100/basics-05-128.png');
-	-webkit-filter: invert(100%); filter: invert(100%);
-	margin-left: ;
-	outline-width: 0;
-	-moz-transform: scale(-1, -1);
-    -o-transform: scale(-1, -1);
-    -webkit-transform: scale(-1, -1);
-    transform: scale(-1, -1);
-    stroke: none;
+	display: none;
 }
 
 
