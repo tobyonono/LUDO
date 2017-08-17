@@ -10,6 +10,7 @@
     <link href="//fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
     <link href="//fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Cousine" rel="stylesheet">
+    <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/office-code-pro" type="text/css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.2/css/swiper.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.2/css/swiper.min.css">
     <link href="app.css" rel="stylesheet" />
@@ -17,6 +18,7 @@
 </head>
 
 <body>
+  <div class="loader"><span>Open Spotify</span></div>
     <div id="login">
       <div class="video-background">
         <div class="video-foreground">
@@ -971,6 +973,11 @@
             }
         }
     })();
+    </script>
+    <script type="text/javascript">
+      $(window).load(function() {
+        $(".loader").delay(2500).fadeOut();
+      })
     </script>
      
 </body>
