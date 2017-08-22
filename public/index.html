@@ -975,9 +975,18 @@
     })();
     </script>
     <script type="text/javascript">
-      $(window).load(function() {
+      $(window).load(function() 
+      {
+         document.getElementsByClassName('.loader')
+        if($(this).hasClass('secondPhase'))
+        {
+          $('.loader span').text('Stay Wholesome');
+        }
+
         $(".loader").delay(2500).fadeOut();
-      })
+        $(this).toggleClass('secondPhase');
+        
+      });
     </script>
      
 </body>
